@@ -1,4 +1,4 @@
-# 🐾 Sistema de Adoção de Animais
+# 🐾 adote-me.org
 
 Este é um sistema de linha de comando (CLI) para gerenciar o fluxo completo de um abrigo de animais. Ele controla desde o cadastro de animais e a triagem de adotantes até o processo de reserva, adoção e devolução.
 
