@@ -1,0 +1,26 @@
+[
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Rex",
+        "raca": "Vira-lata",
+        "status": "Adotado",
+        "porte": "Médio",
+        "precisa_passeio": true
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Mimi",
+        "raca": "Persa",
+        "status": "Disponível",
+        "porte": "Pequeno",
+        "independencia": 5
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Toninho",
+        "raca": "Vira-lata",
+        "status": "Disponível",
+        "porte": "Pequeno",
+        "independencia": 2
+    }
+]
