@@ -31,6 +31,14 @@ O objetivo principal é aplicar conceitos de Programação Orientada a Objetos (
     └── 📄 test_strategies.py 
 ```
 
+# 🎡 Funcionamento
+
+Abra o terminal, roda essa linha e fica sussa.
+
+```python
+python -m src.adocao.main
+```
+
 # 🏛️ Arquitetura
 
 ```mermaid
