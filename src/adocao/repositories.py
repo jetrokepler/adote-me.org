@@ -9,24 +9,20 @@ class Repositorio:
         self.arquivo_adotantes = "adotantes.json"
 
     def salvar_animais(self, animais: List[Animal]):
-        # Transforma objetos em dicionários
         dados = [animal.to_dict() for animal in animais]
         try:
             with open(self.arquivo_animais, 'w', encoding='utf-8') as f:
                 json.dump(dados, f, indent=4, ensure_ascii=False)
-            print("💾 Animais salvos com sucesso.")
+                print("💾 Animais salvos com sucesso.")
         except Exception as e:
             print(f"Erro ao salvar animais: {e}")
 
     def carregar_animais(self) -> List[Animal]:
         if not os.path.exists(self.arquivo_animais):
             return []
-        
         try:
             with open(self.arquivo_animais, 'r', encoding='utf-8') as f:
                 dados_brutos = json.load(f)
-            
-            # Transforma dicionários de volta em objetos (usando a Factory do Animal)
             lista_objetos = []
             for item in dados_brutos:
                 obj = Animal.from_dict(item)
@@ -42,14 +38,13 @@ class Repositorio:
         try:
             with open(self.arquivo_adotantes, 'w', encoding='utf-8') as f:
                 json.dump(dados, f, indent=4, ensure_ascii=False)
-            print("💾 Adotantes salvos com sucesso.")
+                print("💾 Adotantes salvos com sucesso.")
         except Exception as e:
             print(f"Erro ao salvar adotantes: {e}")
 
     def carregar_adotantes(self) -> List[Adotante]:
         if not os.path.exists(self.arquivo_adotantes):
             return []
-        
         try:
             with open(self.arquivo_adotantes, 'r', encoding='utf-8') as f:
                 dados_brutos = json.load(f)

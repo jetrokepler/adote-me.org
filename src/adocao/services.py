@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple, Optional
 from .domain import Animal, Adotante, Cachorro, Gato
 from .enums import StatusAnimal, PorteAnimal, TipoMoradia
 from .repositories import Repositorio
@@ -6,81 +6,144 @@ from .repositories import Repositorio
 class SistemaAdocao:
     def __init__(self):
         self.repo = Repositorio()
-        # Carrega dados do disco assim que o sistema inicia
         self.animais: List[Animal] = self.repo.carregar_animais()
         self.adotantes: List[Adotante] = self.repo.carregar_adotantes()
+        self.IDADE_MINIMA = 18
+        self.AREA_MINIMA_PORTE_G = 40.0
 
-    def cadastrar_cachorro(self, nome, raca, porte, precisa_passeio):
-        # Cria o objeto Cachorro
-        novo_pet = Cachorro(nome, raca, StatusAnimal.DISPONIVEL, porte, precisa_passeio)
-        self.animais.append(novo_pet)
-        self.repo.salvar_animais(self.animais) # Salva no JSON
-        print(f"✅ Cachorro {nome} cadastrado com sucesso!")
-
-    def cadastrar_gato(self, nome, raca, porte, independencia):
-        # Cria o objeto Gato
-        novo_pet = Gato(nome, raca, StatusAnimal.DISPONIVEL, porte, independencia)
+    def cadastrar_cachorro(self, nome: str, raca: str, porte: PorteAnimal, temperamento: List[str], precisa_passeio: bool):
+        novo_pet = Cachorro(nome, raca, StatusAnimal.DISPONIVEL, porte, temperamento, precisa_passeio)
         self.animais.append(novo_pet)
         self.repo.salvar_animais(self.animais)
-        print(f"✅ Gato {nome} cadastrado com sucesso!")
+        print(f"✅ Cachorro {nome} cadastrado!")
 
-    def cadastrar_adotante(self, nome, contato, moradia, tem_criancas):
-        novo_adotante = Adotante(nome, contato, moradia, tem_criancas)
+    def cadastrar_gato(self, nome: str, raca: str, porte: PorteAnimal, temperamento: List[str], independencia: int):
+        novo_pet = Gato(nome, raca, StatusAnimal.DISPONIVEL, porte, temperamento, independencia)
+        self.animais.append(novo_pet)
+        self.repo.salvar_animais(self.animais)
+        print(f"✅ Gato {nome} cadastrado!")
+
+    def cadastrar_adotante(self, nome: str, contato: str, idade: int, moradia: TipoMoradia, area_util: float, tem_criancas: bool):
+        novo_adotante = Adotante(nome, contato, idade, moradia, area_util, tem_criancas)
         self.adotantes.append(novo_adotante)
         self.repo.salvar_adotantes(self.adotantes)
         print(f"👤 Adotante {nome} cadastrado!")
 
-    def realizar_adocao_simples(self, indice_animal, indice_adotante):
-        """
-        Simula a relação entre Adotante e Animal mudando o status.
-        (Futuramente teremos uma classe Adocao para isso).
-        """
+    def _buscar_por_indice(self, idx_animal: int, idx_adotante: Optional[int] = None) -> Tuple[Animal, Optional[Adotante]]:
         try:
-            animal = self.animais[indice_animal]
-            adotante = self.adotantes[indice_adotante]
+            animal = self.animais[idx_animal]
+            adotante = self.adotantes[idx_adotante] if idx_adotante is not None else None
+            return animal, adotante
+        except IndexError:
+            raise ValueError("Índice inválido.")
+
+    def _validar_politica_adocao(self, animal: Animal, adotante: Adotante) -> Tuple[bool, str]:
+        if adotante.idade < self.IDADE_MINIMA:
+            return False, f"Adotante deve ter >= {self.IDADE_MINIMA} anos."
+
+        if animal.porte == PorteAnimal.G:
+            if adotante.moradia != TipoMoradia.CASA:
+                return False, "Animais de Porte Grande exigem moradia em CASA."
+            if adotante.area_util < self.AREA_MINIMA_PORTE_G:
+                return False, f"Porte G exige área mínima de {self.AREA_MINIMA_PORTE_G}m²."
+
+        if adotante.tem_criancas:
+            temperamentos_pet = [t.lower() for t in animal.temperamento]
+            if "arisco" in temperamentos_pet or "agressivo" in temperamentos_pet:
+                return False, "Não permitido adotar animais 'ariscos' em casas com crianças."
+
+        return True, "Aprovado"
+
+    def reservar_animal(self, idx_animal: int, idx_adotante: int):
+        try:
+            animal, adotante = self._buscar_por_indice(idx_animal, idx_adotante)
             
             if animal.status != StatusAnimal.DISPONIVEL:
-                print(f"❌ O animal {animal.nome} não está disponível (Status: {animal.status.value}).")
+                print(f"❌ {animal.nome} não está disponível (Status: {animal.status.value}).")
+                return
+            
+            aprovado, motivo = self._validar_politica_adocao(animal, adotante)
+            if not aprovado:
+                print(f"❌ Reserva negada pela política: {motivo}")
                 return
 
-            # Regra de negócio simples: Mudar status para ADOTADO
+            animal.mudar_status(StatusAnimal.RESERVADO)
+            self.repo.salvar_animais(self.animais)
+            print(f"🗓️  Reserva confirmada: {animal.nome} reservado para {adotante.nome}.")
+            
+        except ValueError as e: print(f"❌ {e}")
+
+    def realizar_adocao(self, idx_animal: int, idx_adotante: int):
+        try:
+            animal, adotante = self._buscar_por_indice(idx_animal, idx_adotante)
+
+            if animal.status not in [StatusAnimal.DISPONIVEL, StatusAnimal.RESERVADO]:
+                print(f"❌ Erro: Status inválido ({animal.status.value}).")
+                return
+
+            aprovado, motivo = self._validar_politica_adocao(animal, adotante)
+            if not aprovado:
+                print(f"❌ Adoção negada: {motivo}")
+                return
+
             animal.mudar_status(StatusAnimal.ADOTADO)
             self.repo.salvar_animais(self.animais)
-            print(f"🎉 Sucesso! {adotante.nome} adotou {animal.nome}!")
+            print(f"🎉 ADOÇÃO SUCESSO! {adotante.nome} adotou {animal.nome}!")
+
+        except ValueError as e: print(f"❌ {e}")
+
+    def processar_devolucao(self, idx_animal: int, motivo: str):
+        try:
+            animal, _ = self._buscar_por_indice(idx_animal)
+            if animal.status != StatusAnimal.ADOTADO:
+                print(f"❌ Erro: Apenas animais adotados podem ser devolvidos.")
+                return
+
+            print(f"📝 Motivo: '{motivo}'")
+            animal.mudar_status(StatusAnimal.DEVOLVIDO)
+
+            if "doente" in motivo.lower() or "saude" in motivo.lower():
+                animal.mudar_status(StatusAnimal.QUARENTENA)
+            elif "mordeu" in motivo.lower() or "agressivo" in motivo.lower():
+                animal.mudar_status(StatusAnimal.INADOTAVEL)
+            else:
+                animal.mudar_status(StatusAnimal.DISPONIVEL)
+
+            self.repo.salvar_animais(self.animais)
+            print(f"🔙 Devolução concluída. Novo status: {animal.status.value}.")
             
-        except IndexError:
-            print("❌ Erro: Índice de animal ou adotante inválido.")
-        except Exception as e:
-            print(f"❌ Erro ao realizar adoção: {e}")
+        except ValueError as e: print(f"❌ {e}")
+
+    def vacinar_animal(self, idx_animal: int, nome_vacina: str):
+        try:
+            animal, _ = self._buscar_por_indice(idx_animal)
+            if hasattr(animal, 'vacinar'):
+                animal.vacinar(nome_vacina)
+                self.repo.salvar_animais(self.animais)
+                print(f"💉 {animal.nome} foi vacinado contra {nome_vacina}!")
+            else:
+                print(f"⚠️ {animal.nome} não pode ser vacinado (classe não suporta).")
+        except ValueError as e: print(f"❌ {e}")
+
+    def treinar_animal(self, idx_animal: int):
+        try:
+            animal, _ = self._buscar_por_indice(idx_animal)
+            if hasattr(animal, 'treinar'):
+                animal.treinar()
+                self.repo.salvar_animais(self.animais)
+                print(f"🎓 {animal.nome} recebeu treinamento! Nível atualizado.")
+            else:
+                print(f"⚠️ {animal.nome} não pode ser treinado (classe não suporta).")
+        except ValueError as e: print(f"❌ {e}")
+
 
     def gerar_relatorio_animais(self):
-        print("\n--- 📊 RELATÓRIO DE ANIMAIS DO ABRIGO ---")
-        print(f"Total de registros: {len(self.animais)}")
-        
-        # Filtros usando List Comprehension
-        disponiveis = [a for a in self.animais if a.status == StatusAnimal.DISPONIVEL]
-        adotados = [a for a in self.animais if a.status == StatusAnimal.ADOTADO]
-
-        print(f"\n🟢 DISPONÍVEIS ({len(disponiveis)}):")
-        if not disponiveis:
-            print("   (Nenhum animal disponível no momento)")
-        for a in disponiveis:
-            print(f"   - {a}") # O Python usa o método __str__ do animal automaticamente
-            
-        print(f"\n🔴 JÁ ADOTADOS ({len(adotados)}):")
-        if not adotados:
-            print("   (Nenhum animal adotado ainda)")
-        for a in adotados:
-            print(f"   - {a}")
-        print("-------------------------------------------")
-    
-    def listar_indices(self):
-        """Ajuda o usuário a escolher os IDs para adoção"""
-        print("\n🔢 Lista para Seleção:")
-        print("--- ANIMAIS ---")
+        print("\n--- STATUS DO ABRIGO ---")
         for i, a in enumerate(self.animais):
-            print(f"[{i}] {a.nome} ({a.status.value})")
-            
+            icone = "🟢" if a.status == StatusAnimal.DISPONIVEL else "🔴" if a.status == StatusAnimal.ADOTADO else "🟡"
+            print(f"[{i}] {icone} {a.nome} (Porte {a.porte.value}, {a.status.value})")
+
+    def listar_adotantes(self):
         print("\n--- ADOTANTES ---")
         for i, a in enumerate(self.adotantes):
-            print(f"[{i}] {a.nome}")
+            print(f"[{i}] {a.nome} ({a.moradia.value}, {a.area_util}m²)")
