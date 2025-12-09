@@ -1,26 +1,69 @@
 [
     {
         "tipo_classe": "Cachorro",
-        "nome": "Rex",
+        "nome": "Hulk",
+        "raca": "Pitbull",
+        "status": "Quarentena",
+        "porte": "Grande",
+        "temperamento": [],
+        "precisa_passeio": true,
+        "historico": [
+            "[2025-12-08 16:47] Animal cadastrado no sistema.",
+            "[2025-12-08 16:47] Status alterado: Adotado -> Devolvido",
+            "[2025-12-08 16:47] Status alterado: Devolvido -> Quarentena"
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Totó",
         "raca": "Vira-lata",
-        "status": "Adotado",
+        "status": "Quarentena",
         "porte": "Médio",
-        "precisa_passeio": true
+        "temperamento": [
+            "calmo"
+        ],
+        "precisa_passeio": true,
+        "historico": [
+            "[2025-12-08 19:51] Animal cadastrado no sistema.",
+            "[2025-12-08 20:42] Status alterado: Disponível -> Reservado",
+            "[2025-12-08 20:43] Status alterado: Reservado -> Adotado",
+            "[2025-12-08 20:43] Status alterado: Adotado -> Devolvido",
+            "[2025-12-08 20:43] Status alterado: Devolvido -> Quarentena"
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Thor",
+        "raca": "Dogue",
+        "status": "Disponível",
+        "porte": "Grande",
+        "temperamento": [
+            "dócil"
+        ],
+        "precisa_passeio": true,
+        "historico": [
+            "[2025-12-08 20:00] Animal cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0
     },
     {
         "tipo_classe": "Gato",
-        "nome": "Mimi",
-        "raca": "Persa",
+        "nome": "Scar",
+        "raca": "Siamês",
         "status": "Disponível",
         "porte": "Pequeno",
-        "independencia": 5
-    },
-    {
-        "tipo_classe": "Gato",
-        "nome": "Toninho",
-        "raca": "Vira-lata",
-        "status": "Disponível",
-        "porte": "Pequeno",
-        "independencia": 2
+        "temperamento": [
+            "arisco"
+        ],
+        "independencia": 5,
+        "historico": [
+            "[2025-12-08 20:39] Animal cadastrado no sistema."
+        ],
+        "vacinas": {}
     }
 ]
