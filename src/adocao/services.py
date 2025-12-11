@@ -2,6 +2,7 @@ from typing import List, Tuple, Optional
 from .domain import Animal, Adotante, Cachorro, Gato
 from .enums import StatusAnimal, PorteAnimal, TipoMoradia
 from .repositories import Repositorio
+from .strategies import FabricaTaxas 
 
 class SistemaAdocao:
     def __init__(self):
@@ -86,9 +87,20 @@ class SistemaAdocao:
                 print(f"❌ Adoção negada: {motivo}")
                 return
 
+            estrategia = FabricaTaxas.obter_estrategia(animal, adotante)
+            valor_taxa = estrategia.calcular(animal, adotante)
+            
             animal.mudar_status(StatusAnimal.ADOTADO)
             self.repo.salvar_animais(self.animais)
-            print(f"🎉 ADOÇÃO SUCESSO! {adotante.nome} adotou {animal.nome}!")
+            
+            print(f"\n🎉 ADOÇÃO SUCESSO! {adotante.nome} adotou {animal.nome}!")
+            print("="*40)
+            print("          RECIBO DE ADOÇÃO")
+            print("="*40)
+            print(f"Animal: {animal.nome} ({animal.porte.value})")
+            print(f"Tutor:  {adotante.nome}")
+            print(f"Taxa:   R$ {valor_taxa}")
+            print("="*40 + "\n")
 
         except ValueError as e: print(f"❌ {e}")
 
@@ -114,6 +126,7 @@ class SistemaAdocao:
             
         except ValueError as e: print(f"❌ {e}")
 
+
     def vacinar_animal(self, idx_animal: int, nome_vacina: str):
         try:
             animal, _ = self._buscar_por_indice(idx_animal)
@@ -135,7 +148,6 @@ class SistemaAdocao:
             else:
                 print(f"⚠️ {animal.nome} não pode ser treinado (classe não suporta).")
         except ValueError as e: print(f"❌ {e}")
-
 
     def gerar_relatorio_animais(self):
         print("\n--- STATUS DO ABRIGO ---")

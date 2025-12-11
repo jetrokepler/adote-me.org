@@ -1,42 +1,18 @@
 [
     {
-        "nome": "Jetro Viana",
-        "contato": "+ 55 88 997141016",
-        "idade": 18,
+        "nome": "Chica",
+        "contato": "1",
+        "idade": 61,
         "moradia": "Casa",
-        "area_util": 0.0,
-        "tem_criancas": false
-    },
-    {
-        "nome": "Enzo",
-        "contato": "+55 11 911111111",
-        "idade": 16,
-        "moradia": "Casa",
-        "area_util": 100.0,
-        "tem_criancas": false
-    },
-    {
-        "nome": "Carlos",
-        "contato": "+55 22 922222222",
-        "idade": 30,
-        "moradia": "Apartamento",
-        "area_util": 60.0,
-        "tem_criancas": false
-    },
-    {
-        "nome": "Ana",
-        "contato": "+55 33 933333333",
-        "idade": 35,
-        "moradia": "Casa",
-        "area_util": 200.0,
+        "area_util": 344.0,
         "tem_criancas": true
     },
     {
-        "nome": "Alice",
-        "contato": "+55 44944444444",
-        "idade": 28,
+        "nome": "maneu",
+        "contato": "55",
+        "idade": 21,
         "moradia": "Casa",
-        "area_util": 150.0,
-        "tem_criancas": false
+        "area_util": 500.0,
+        "tem_criancas": true
     }
 ]
