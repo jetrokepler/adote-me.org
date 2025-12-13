@@ -159,3 +159,60 @@ class SistemaAdocao:
         print("\n--- ADOTANTES ---")
         for i, a in enumerate(self.adotantes):
             print(f"[{i}] {a.nome} ({a.moradia.value}, {a.area_util}m²)")
+
+    def excluir_animal(self, idx_animal: int):
+        try:
+            self._buscar_por_indice(idx_animal)
+            
+            removido = self.animais.pop(idx_animal)
+            self.repo.salvar_animais(self.animais)
+            print(f"🗑️ Animal '{removido.nome}' removido com sucesso!")
+        except ValueError as e: print(f"❌ {e}")
+        except IndexError: print("❌ Índice inválido.")
+
+    def excluir_adotante(self, idx_adotante: int):
+        try:
+            if idx_adotante < 0 or idx_adotante >= len(self.adotantes):
+                raise ValueError("Índice inválido.")
+            
+            removido = self.adotantes.pop(idx_adotante)
+            self.repo.salvar_adotantes(self.adotantes)
+            print(f"🗑️ Adotante '{removido.nome}' removido com sucesso!")
+        except ValueError as e: print(f"❌ {e}")
+
+    def editar_animal(self, idx_animal: int, novo_nome=None, nova_raca=None, novo_porte=None, novo_temperamento=None, extra_dado=None):
+        try:
+            animal, _ = self._buscar_por_indice(idx_animal)
+            
+            if novo_nome: animal._nome = novo_nome
+            if nova_raca: animal._raca = nova_raca
+            if novo_porte: animal._porte = novo_porte
+            if novo_temperamento: animal._temperamento = novo_temperamento
+
+            if isinstance(animal, Cachorro) and extra_dado is not None:
+                animal._precisa_passeio = extra_dado
+            elif isinstance(animal, Gato) and extra_dado is not None:
+                animal._independencia = extra_dado
+
+            animal.adicionar_evento("Dados cadastrais editados manualmente.")
+            self.repo.salvar_animais(self.animais)
+            print(f"✏️ Dados de {animal.nome} atualizados!")
+            
+        except ValueError as e: print(f"❌ {e}")
+
+    def editar_adotante(self, idx_adotante: int, novo_nome=None, novo_contato=None, nova_moradia=None, nova_area=None):
+        try:
+            if idx_adotante < 0 or idx_adotante >= len(self.adotantes):
+                raise ValueError("Índice inválido.")
+            
+            adotante = self.adotantes[idx_adotante]
+
+            if novo_nome: adotante._nome = novo_nome
+            if novo_contato: adotante._contato = novo_contato
+            if nova_moradia: adotante._moradia = nova_moradia
+            if nova_area: adotante._area_util = nova_area
+
+            self.repo.salvar_adotantes(self.adotantes)
+            print(f"✏️ Dados de {adotante.nome} atualizados!")
+
+        except ValueError as e: print(f"❌ {e}")
