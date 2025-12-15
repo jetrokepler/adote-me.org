@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from .enums import StatusAnimal, PorteAnimal, TipoMoradia
+from .exceptions import TransicaoStatusError
 
 class VacinavelMixin:
     def __init__(self):
@@ -87,6 +88,7 @@ class FilaEspera:
             'data_entrada': datetime.now().isoformat()
         }
         self.interessados.append(novo_item)
+        
         self.interessados.sort(key=lambda x: (-x['score'], x['data_entrada']))
 
     def proximo(self) -> Optional[Adotante]:
@@ -114,6 +116,7 @@ class Animal(ABC):
         self._status = status
         self._porte = porte
         self._temperamento = temperamento
+        
         self.historico_eventos: List[str] = []
         self.data_reserva: Optional[str] = None
         self.nome_reservante: Optional[str] = None
@@ -152,7 +155,7 @@ class Animal(ABC):
 
     def mudar_status(self, novo_status: StatusAnimal):
         if not self.pode_mudar_para(novo_status):
-            raise ValueError(f"Transição inválida: {self._status.value} -> {novo_status.value}")
+            raise TransicaoStatusError(f"Transição inválida: {self._status.value} -> {novo_status.value}")
         
         if self._status == StatusAnimal.RESERVADO and novo_status != StatusAnimal.RESERVADO:
             self.data_reserva = None
@@ -170,7 +173,6 @@ class Animal(ABC):
         if tipo == "Cachorro": return Cachorro.from_dict_concreto(dados)
         elif tipo == "Gato": return Gato.from_dict_concreto(dados)
         return None
-
 
 class Cachorro(Animal, VacinavelMixin, AdestravelMixin):
     def __init__(self, nome: str, raca: str, status: StatusAnimal, porte: PorteAnimal, temperamento: List[str], precisa_passeio: bool):
@@ -211,6 +213,7 @@ class Cachorro(Animal, VacinavelMixin, AdestravelMixin):
         obj.nivel_adestramento = dados.get("nivel_adestramento", 0)
         obj.data_reserva = dados.get("data_reserva")
         obj.nome_reservante = dados.get("nome_reservante")
+        
         lista_fila = dados.get("fila_espera", [])
         for item in lista_fila:
             adotante = Adotante.from_dict(item['adotante'])
@@ -260,6 +263,7 @@ class Gato(Animal, VacinavelMixin):
         obj.agenda_vacinas = dados.get("vacinas", {})
         obj.data_reserva = dados.get("data_reserva")
         obj.nome_reservante = dados.get("nome_reservante")
+        
         lista_fila = dados.get("fila_espera", [])
         for item in lista_fila:
             adotante = Adotante.from_dict(item['adotante'])
