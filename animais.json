@@ -1,37 +1,43 @@
 [
     {
         "tipo_classe": "Cachorro",
-        "nome": "Marolento",
-        "raca": "sim",
-        "status": "Adotado",
-        "porte": "Grande",
+        "nome": "xibata",
+        "raca": "a",
+        "status": "Quarentena",
+        "porte": "Médio",
         "temperamento": [
             "calmo"
         ],
         "precisa_passeio": true,
         "historico": [
-            "[2025-12-10 21:22] Animal cadastrado no sistema.",
-            "[2025-12-10 21:22] Status alterado: Disponível -> Reservado",
-            "[2025-12-10 21:22] Status alterado: Reservado -> Adotado"
+            "[2025-12-15 02:59] Cadastrado no sistema.",
+            "[2025-12-15 03:00] Status alterado: Disponível -> Adotado",
+            "[2025-12-15 03:01] Status alterado: Adotado -> Devolvido",
+            "[2025-12-15 03:01] Status alterado: Devolvido -> Quarentena"
         ],
         "vacinas": {},
-        "nivel_adestramento": 0
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
     },
     {
-        "tipo_classe": "Cachorro",
-        "nome": "sa",
-        "raca": "as",
-        "status": "Adotado",
-        "porte": "Grande",
+        "tipo_classe": "Gato",
+        "nome": "s",
+        "raca": "s",
+        "status": "Disponível",
+        "porte": "Médio",
         "temperamento": [
-            "aa"
+            "calmo"
         ],
-        "precisa_passeio": false,
+        "independencia": 3,
         "historico": [
-            "[2025-12-10 21:24] Animal cadastrado no sistema.",
-            "[2025-12-10 21:24] Status alterado: Disponível -> Adotado"
+            "[2025-12-15 03:01] Cadastrado no sistema.",
+            "[2025-12-15 03:02] Dados cadastrais editados manualmente."
         ],
         "vacinas": {},
-        "nivel_adestramento": 0
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
     }
 ]

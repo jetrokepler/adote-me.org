@@ -1,15 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any
-from datetime import date, datetime
+from typing import List, Dict, Any, Optional
+from datetime import datetime
 from .enums import StatusAnimal, PorteAnimal, TipoMoradia
 
 class VacinavelMixin:
     def __init__(self):
-        self.agenda_vacinas: Dict[str, str] = {}
+        self.agenda_vacinas: Dict[str, str] = {} 
 
     def vacinar(self, nome_vacina: str):
-        self.agenda_vacinas[nome_vacina] = date.today().isoformat()
-        if isinstance(self, Animal):
+        self.agenda_vacinas[nome_vacina] = datetime.now().strftime("%Y-%m-%d")
+        if isinstance(self, Animal): 
             self.adicionar_evento(f"Vacinado contra {nome_vacina}")
 
 class AdestravelMixin:
@@ -18,9 +18,8 @@ class AdestravelMixin:
 
     def treinar(self):
         self.nivel_adestramento += 1
-        if isinstance(self, Animal):
+        if isinstance(self, Animal): 
             self.adicionar_evento(f"Treinado. Nível atual: {self.nivel_adestramento}")
-
 
 class Pessoa(ABC):
     def __init__(self, nome: str, contato: str):
@@ -73,6 +72,40 @@ class Adotante(Pessoa):
     def __str__(self):
         return f"[Adotante] {self.nome}, {self._idade} anos ({self._moradia.value}, {self._area_util}m²)"
 
+class FilaEspera:
+    def __init__(self):
+        self.interessados: List[Dict[str, Any]] = []
+
+    def adicionar(self, adotante: Adotante, score: int):
+        for item in self.interessados:
+            if item['adotante'].nome == adotante.nome: 
+                return 
+        
+        novo_item = {
+            'adotante': adotante,
+            'score': score,
+            'data_entrada': datetime.now().isoformat()
+        }
+        self.interessados.append(novo_item)
+        self.interessados.sort(key=lambda x: (-x['score'], x['data_entrada']))
+
+    def proximo(self) -> Optional[Adotante]:
+        if self.interessados:
+            return self.interessados.pop(0)['adotante']
+        return None
+
+    def __len__(self): 
+        return len(self.interessados)
+
+    def to_list_dict(self) -> List[Dict]:
+        lista_salva = []
+        for item in self.interessados:
+            lista_salva.append({
+                'adotante': item['adotante'].to_dict(),
+                'score': item['score'],
+                'data_entrada': item['data_entrada']
+            })
+        return lista_salva
 
 class Animal(ABC):
     def __init__(self, nome: str, raca: str, status: StatusAnimal, porte: PorteAnimal, temperamento: List[str]):
@@ -82,7 +115,12 @@ class Animal(ABC):
         self._porte = porte
         self._temperamento = temperamento
         self.historico_eventos: List[str] = []
-        self.adicionar_evento("Animal cadastrado no sistema.")
+        self.data_reserva: Optional[str] = None
+        self.nome_reservante: Optional[str] = None
+        self.fila_espera = FilaEspera()
+        
+        if len(self.historico_eventos) == 0:
+            self.adicionar_evento("Cadastrado no sistema.")
 
     @property
     def nome(self): return self._nome
@@ -94,7 +132,6 @@ class Animal(ABC):
     def temperamento(self): return self._temperamento
 
     def adicionar_evento(self, descricao: str):
-        """Registra um evento com data e hora."""
         data_hora = datetime.now().strftime("%Y-%m-%d %H:%M")
         self.historico_eventos.append(f"[{data_hora}] {descricao}")
 
@@ -117,7 +154,10 @@ class Animal(ABC):
         if not self.pode_mudar_para(novo_status):
             raise ValueError(f"Transição inválida: {self._status.value} -> {novo_status.value}")
         
-        # ADICIONADO: Registro no histórico
+        if self._status == StatusAnimal.RESERVADO and novo_status != StatusAnimal.RESERVADO:
+            self.data_reserva = None
+            self.nome_reservante = None
+
         self.adicionar_evento(f"Status alterado: {self._status.value} -> {novo_status.value}")
         self._status = novo_status
 
@@ -130,6 +170,7 @@ class Animal(ABC):
         if tipo == "Cachorro": return Cachorro.from_dict_concreto(dados)
         elif tipo == "Gato": return Gato.from_dict_concreto(dados)
         return None
+
 
 class Cachorro(Animal, VacinavelMixin, AdestravelMixin):
     def __init__(self, nome: str, raca: str, status: StatusAnimal, porte: PorteAnimal, temperamento: List[str], precisa_passeio: bool):
@@ -147,10 +188,12 @@ class Cachorro(Animal, VacinavelMixin, AdestravelMixin):
             "porte": self._porte.value,
             "temperamento": self._temperamento,
             "precisa_passeio": self._precisa_passeio,
-            # Novos campos de persistência dos Mixins/Histórico
             "historico": self.historico_eventos,
             "vacinas": self.agenda_vacinas,
-            "nivel_adestramento": self.nivel_adestramento
+            "nivel_adestramento": self.nivel_adestramento,
+            "data_reserva": self.data_reserva,
+            "nome_reservante": self.nome_reservante, 
+            "fila_espera": self.fila_espera.to_list_dict()
         }
 
     @classmethod
@@ -166,6 +209,16 @@ class Cachorro(Animal, VacinavelMixin, AdestravelMixin):
         obj.historico_eventos = dados.get("historico", [])
         obj.agenda_vacinas = dados.get("vacinas", {})
         obj.nivel_adestramento = dados.get("nivel_adestramento", 0)
+        obj.data_reserva = dados.get("data_reserva")
+        obj.nome_reservante = dados.get("nome_reservante")
+        lista_fila = dados.get("fila_espera", [])
+        for item in lista_fila:
+            adotante = Adotante.from_dict(item['adotante'])
+            obj.fila_espera.interessados.append({
+                'adotante': adotante, 
+                'score': item['score'], 
+                'data_entrada': item['data_entrada']
+            })
         return obj
     
     def __str__(self):
@@ -186,9 +239,11 @@ class Gato(Animal, VacinavelMixin):
             "porte": self._porte.value,
             "temperamento": self._temperamento,
             "independencia": self._independencia,
-            # Novos campos
             "historico": self.historico_eventos,
-            "vacinas": self.agenda_vacinas
+            "vacinas": self.agenda_vacinas,
+            "data_reserva": self.data_reserva,
+            "nome_reservante": self.nome_reservante,
+            "fila_espera": self.fila_espera.to_list_dict()
         }
 
     @classmethod
@@ -203,6 +258,16 @@ class Gato(Animal, VacinavelMixin):
         )
         obj.historico_eventos = dados.get("historico", [])
         obj.agenda_vacinas = dados.get("vacinas", {})
+        obj.data_reserva = dados.get("data_reserva")
+        obj.nome_reservante = dados.get("nome_reservante")
+        lista_fila = dados.get("fila_espera", [])
+        for item in lista_fila:
+            adotante = Adotante.from_dict(item['adotante'])
+            obj.fila_espera.interessados.append({
+                'adotante': adotante, 
+                'score': item['score'], 
+                'data_entrada': item['data_entrada']
+            })
         return obj
         
     def __str__(self):

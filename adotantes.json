@@ -1,18 +1,10 @@
 [
     {
-        "nome": "Chica",
-        "contato": "1",
-        "idade": 61,
-        "moradia": "Casa",
-        "area_util": 344.0,
-        "tem_criancas": true
-    },
-    {
-        "nome": "maneu",
-        "contato": "55",
-        "idade": 21,
-        "moradia": "Casa",
-        "area_util": 500.0,
+        "nome": "mestre",
+        "contato": "dsa",
+        "idade": 34,
+        "moradia": "Apartamento",
+        "area_util": 39.0,
         "tem_criancas": true
     }
 ]

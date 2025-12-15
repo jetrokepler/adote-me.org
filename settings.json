@@ -1,0 +1,11 @@
+{
+    "reserva_horas": 0,
+    "pesos_compatibilidade": {
+        "moradia": 40,
+        "criancas": 30,
+        "experiencia": 20,
+        "idade_energia": 10
+    },
+    "idade_minima": 18,
+    "area_minima_g": 40.0
+}
