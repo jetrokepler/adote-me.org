@@ -1,11 +1,9 @@
 import sys
 import os
 
-# Garante que o Python encontre o pacote 'src'
 sys.path.append(os.getcwd())
 
 try:
-    # Ajuste dos imports para funcionar com a nova estrutura de pastas
     from src.adocao.services import SistemaAdocao
     from src.adocao.enums import PorteAnimal, TipoMoradia, StatusAnimal
     from src.adocao.domain import Cachorro, Gato
@@ -16,7 +14,6 @@ except ImportError as e:
     print(f"Detalhe: {e}")
     sys.exit(1)
 
-# Função auxiliar para garantir a escolha numérica do temperamento
 def escolher_temperamento_numerico():
     print("Temperamento:")
     print("1. Calmo/Dócil")
@@ -37,10 +34,8 @@ def menu_configuracoes(sistema):
         print("\n⚙️  --- EDITOR DE CONFIGURAÇÕES (settings.json) ---")
         configs = sistema.settings
         
-        # FILTRO: Só pega as chaves que NÃO são dicionários
         chaves_editaveis = [k for k, v in configs.items() if not isinstance(v, dict)]
         
-        # Lista apenas as configurações simples
         for i, chave in enumerate(chaves_editaveis):
             valor = configs[chave]
             print(f"{i+1}. {chave.ljust(20)} : {valor}")
@@ -102,7 +97,6 @@ def main():
         ( •ᴥ•)
         / >🎀   [ {G1}a{G2}d{G3}o{G4}t{G1}e{G2}-{G3}m{G4}e{G1}.{G2}o{G3}r{G4}g{RESET} ]
         """)
-        # Mostra qual banco está sendo usado no título
         print(f"\n=== 🐾 {G1}MENU PRINCIPAL{RESET} (Banco: {sistema.settings.get('banco_tipo', 'JSON')}) ===")
         print("1. Cadastrar Cachorro")
         print("2. Cadastrar Gato")
@@ -201,12 +195,11 @@ def main():
             print("-" * 30)
 
             try:
-                # ADICIONADO: Validação prévia
                 id_animal = int(input("Digite o ID do Animal: "))
-                sistema.buscar_animal(id_animal) # Garante que existe
+                sistema.buscar_animal(id_animal) 
 
                 id_adotante = int(input("Digite o ID do Adotante: "))
-                sistema.buscar_adotante(id_adotante) # Garante que existe
+                sistema.buscar_adotante(id_adotante) 
 
                 sistema.realizar_adocao(id_animal, id_adotante)
             except (ValueError, AdocaoError) as e:

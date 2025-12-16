@@ -1,0 +1,564 @@
+[
+    {
+        "tipo_classe": "Gato",
+        "nome": "Simba",
+        "raca": "SRD Laranja",
+        "status": "Adotado",
+        "porte": "Médio",
+        "temperamento": [
+            "amoroso",
+            "calmo"
+        ],
+        "independencia": 3,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Adotado"
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Luna",
+        "raca": "Siamês",
+        "status": "Adotado",
+        "porte": "Pequeno",
+        "temperamento": [
+            "vocal",
+            "pegajoso"
+        ],
+        "independencia": 1,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Adotado"
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Thor",
+        "raca": "Maine Coon",
+        "status": "Reservado",
+        "porte": "Grande",
+        "temperamento": [
+            "gigante",
+            "dócil"
+        ],
+        "independencia": 5,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Reservado",
+            "[2025-12-16 03:04] Tiago entrou na fila (Score: 80).",
+            "[2025-12-16 03:04] Quintino entrou na fila (Score: 100).",
+            "[2025-12-16 03:04] Gabriel entrou na fila (Score: 80).",
+            "[2025-12-16 03:04] Paula entrou na fila (Score: 100)."
+        ],
+        "vacinas": {},
+        "data_reserva": "2025-12-16T03:04:42.094434",
+        "nome_reservante": "Beto Lima",
+        "fila_espera": [
+            {
+                "adotante": {
+                    "nome": "Quintino",
+                    "contato": "quin@x.com",
+                    "idade": 55,
+                    "moradia": "Casa",
+                    "area_util": 200.0,
+                    "tem_criancas": false
+                },
+                "score": 100,
+                "data_entrada": "2025-12-16T03:04:42.099269"
+            },
+            {
+                "adotante": {
+                    "nome": "Paula",
+                    "contato": "pau@x.com",
+                    "idade": 31,
+                    "moradia": "Casa",
+                    "area_util": 110.0,
+                    "tem_criancas": false
+                },
+                "score": 100,
+                "data_entrada": "2025-12-16T03:04:42.103490"
+            },
+            {
+                "adotante": {
+                    "nome": "Tiago",
+                    "contato": "ti@x.com",
+                    "idade": 28,
+                    "moradia": "Casa",
+                    "area_util": 80.0,
+                    "tem_criancas": false
+                },
+                "score": 80,
+                "data_entrada": "2025-12-16T03:04:42.096890"
+            },
+            {
+                "adotante": {
+                    "nome": "Gabriel",
+                    "contato": "gabi@x.com",
+                    "idade": 29,
+                    "moradia": "Casa",
+                    "area_util": 80.0,
+                    "tem_criancas": false
+                },
+                "score": 80,
+                "data_entrada": "2025-12-16T03:04:42.101776"
+            }
+        ]
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Salem",
+        "raca": "Bombaim",
+        "status": "Disponível",
+        "porte": "Médio",
+        "temperamento": [
+            "independente"
+        ],
+        "independencia": 9,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Garfield",
+        "raca": "Persa",
+        "status": "Disponível",
+        "porte": "Médio",
+        "temperamento": [
+            "preguiçoso"
+        ],
+        "independencia": 2,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Frajola",
+        "raca": "SRD",
+        "status": "Disponível",
+        "porte": "Médio",
+        "temperamento": [
+            "brincalhão"
+        ],
+        "independencia": 6,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Nala",
+        "raca": "Angorá",
+        "status": "Disponível",
+        "porte": "Pequeno",
+        "temperamento": [
+            "arisco",
+            "nervoso"
+        ],
+        "independencia": 8,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Tom",
+        "raca": "Russian Blue",
+        "status": "Disponível",
+        "porte": "Médio",
+        "temperamento": [
+            "inteligente"
+        ],
+        "independencia": 7,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Marie",
+        "raca": "Branquelo",
+        "status": "Adotado",
+        "porte": "Pequeno",
+        "temperamento": [
+            "mimada"
+        ],
+        "independencia": 2,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Adotado"
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Chico",
+        "raca": "Tigrado",
+        "status": "Adotado",
+        "porte": "Grande",
+        "temperamento": [
+            "territorial"
+        ],
+        "independencia": 6,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Adotado"
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Mittens",
+        "raca": "Ragdoll",
+        "status": "Disponível",
+        "porte": "Grande",
+        "temperamento": [
+            "muito dócil"
+        ],
+        "independencia": 1,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Zelda",
+        "raca": "Sphynx",
+        "status": "Disponível",
+        "porte": "Pequeno",
+        "temperamento": [
+            "carente"
+        ],
+        "independencia": 0,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Loki",
+        "raca": "Bengal",
+        "status": "Quarentena",
+        "porte": "Médio",
+        "temperamento": [
+            "destruidor",
+            "ativo"
+        ],
+        "independencia": 10,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Adotado",
+            "[2025-12-16 03:04] Status alterado: Adotado -> Devolvido",
+            "[2025-12-16 03:04] Status alterado: Devolvido -> Quarentena"
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Pantera",
+        "raca": "SRD Preto",
+        "status": "Disponível",
+        "porte": "Grande",
+        "temperamento": [
+            "protetor"
+        ],
+        "independencia": 5,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Mochi",
+        "raca": "Munchkin",
+        "status": "Disponível",
+        "porte": "Pequeno",
+        "temperamento": [
+            "fofo"
+        ],
+        "independencia": 4,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Rex",
+        "raca": "Pastor Alemão",
+        "status": "Adotado",
+        "porte": "Grande",
+        "temperamento": [
+            "protetor"
+        ],
+        "precisa_passeio": true,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Adotado"
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Mel",
+        "raca": "Golden",
+        "status": "Reservado",
+        "porte": "Grande",
+        "temperamento": [
+            "amoroso",
+            "amigo"
+        ],
+        "precisa_passeio": true,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Reservado",
+            "[2025-12-16 03:04] Laura entrou na fila (Score: 100).",
+            "[2025-12-16 03:04] Sandra entrou na fila (Score: 100)."
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": "2025-12-16T03:04:42.105818",
+        "nome_reservante": "Helena",
+        "fila_espera": [
+            {
+                "adotante": {
+                    "nome": "Laura",
+                    "contato": "laura@x.com",
+                    "idade": 33,
+                    "moradia": "Casa",
+                    "area_util": 100.0,
+                    "tem_criancas": true
+                },
+                "score": 100,
+                "data_entrada": "2025-12-16T03:04:42.111084"
+            },
+            {
+                "adotante": {
+                    "nome": "Sandra",
+                    "contato": "san@x.com",
+                    "idade": 45,
+                    "moradia": "Casa",
+                    "area_util": 150.0,
+                    "tem_criancas": true
+                },
+                "score": 100,
+                "data_entrada": "2025-12-16T03:04:42.114689"
+            }
+        ]
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Pipoca",
+        "raca": "Pinscher",
+        "status": "Inadotável",
+        "porte": "Pequeno",
+        "temperamento": [
+            "agressivo"
+        ],
+        "precisa_passeio": false,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Adotado",
+            "[2025-12-16 03:04] Status alterado: Adotado -> Devolvido",
+            "[2025-12-16 03:04] Status alterado: Devolvido -> Inadotável"
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Paçoca",
+        "raca": "Vira-lata",
+        "status": "Disponível",
+        "porte": "Médio",
+        "temperamento": [
+            "feliz"
+        ],
+        "precisa_passeio": true,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:04] Status alterado: Disponível -> Adotado",
+            "[2025-12-16 03:04] Status alterado: Adotado -> Devolvido",
+            "[2025-12-16 03:04] Status alterado: Devolvido -> Disponível"
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Zeus",
+        "raca": "Husky",
+        "status": "Disponível",
+        "porte": "Grande",
+        "temperamento": [
+            "agitado"
+        ],
+        "precisa_passeio": true,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Lulu",
+        "raca": "Poodle",
+        "status": "Disponível",
+        "porte": "Pequeno",
+        "temperamento": [
+            "elegante"
+        ],
+        "precisa_passeio": false,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Brutos",
+        "raca": "Pitbull",
+        "status": "Disponível",
+        "porte": "Grande",
+        "temperamento": [
+            "dócil"
+        ],
+        "precisa_passeio": true,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Salsicha",
+        "raca": "Dachshund",
+        "status": "Disponível",
+        "porte": "Pequeno",
+        "temperamento": [
+            "teimoso"
+        ],
+        "precisa_passeio": false,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Scooby",
+        "raca": "Dogue Alemão",
+        "status": "Disponível",
+        "porte": "Grande",
+        "temperamento": [
+            "medroso"
+        ],
+        "precisa_passeio": true,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Cachorro",
+        "nome": "Totó",
+        "raca": "SRD",
+        "status": "Disponível",
+        "porte": "Médio",
+        "temperamento": [
+            "leal"
+        ],
+        "precisa_passeio": false,
+        "historico": [
+            "[2025-12-16 03:04] Cadastrado no sistema."
+        ],
+        "vacinas": {},
+        "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    }
+]

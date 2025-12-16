@@ -1,0 +1,162 @@
+[
+    {
+        "nome": "Ana Souza",
+        "contato": "ana@x.com",
+        "idade": 22,
+        "moradia": "Apartamento",
+        "area_util": 60.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Fernanda",
+        "contato": "fe@x.com",
+        "idade": 22,
+        "moradia": "Apartamento",
+        "area_util": 45.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Gabriel",
+        "contato": "gabi@x.com",
+        "idade": 29,
+        "moradia": "Casa",
+        "area_util": 80.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Julia",
+        "contato": "ju@x.com",
+        "idade": 19,
+        "moradia": "Apartamento",
+        "area_util": 50.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Natalia",
+        "contato": "nat@x.com",
+        "idade": 27,
+        "moradia": "Apartamento",
+        "area_util": 70.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Rafael",
+        "contato": "rafa@x.com",
+        "idade": 24,
+        "moradia": "Apartamento",
+        "area_util": 55.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Tiago",
+        "contato": "ti@x.com",
+        "idade": 28,
+        "moradia": "Casa",
+        "area_util": 80.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Beto Lima",
+        "contato": "beto@x.com",
+        "idade": 45,
+        "moradia": "Casa",
+        "area_util": 200.0,
+        "tem_criancas": true
+    },
+    {
+        "nome": "Dona Bento",
+        "contato": "bento@x.com",
+        "idade": 70,
+        "moradia": "Casa",
+        "area_util": 150.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Eduardo",
+        "contato": "edu@x.com",
+        "idade": 35,
+        "moradia": "Casa",
+        "area_util": 500.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Helena",
+        "contato": "he@x.com",
+        "idade": 40,
+        "moradia": "Casa",
+        "area_util": 300.0,
+        "tem_criancas": true
+    },
+    {
+        "nome": "Igor",
+        "contato": "igor@x.com",
+        "idade": 50,
+        "moradia": "Casa",
+        "area_util": 120.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Kleber",
+        "contato": "kleber@x.com",
+        "idade": 60,
+        "moradia": "Casa",
+        "area_util": 250.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Laura",
+        "contato": "laura@x.com",
+        "idade": 33,
+        "moradia": "Casa",
+        "area_util": 100.0,
+        "tem_criancas": true
+    },
+    {
+        "nome": "Marcos",
+        "contato": "marc@x.com",
+        "idade": 44,
+        "moradia": "Casa",
+        "area_util": 180.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Otavio",
+        "contato": "ota@x.com",
+        "idade": 38,
+        "moradia": "Casa",
+        "area_util": 90.0,
+        "tem_criancas": true
+    },
+    {
+        "nome": "Paula",
+        "contato": "pau@x.com",
+        "idade": 31,
+        "moradia": "Casa",
+        "area_util": 110.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Quintino",
+        "contato": "quin@x.com",
+        "idade": 55,
+        "moradia": "Casa",
+        "area_util": 200.0,
+        "tem_criancas": false
+    },
+    {
+        "nome": "Sandra",
+        "contato": "san@x.com",
+        "idade": 45,
+        "moradia": "Casa",
+        "area_util": 150.0,
+        "tem_criancas": true
+    },
+    {
+        "nome": "Carla Dias",
+        "contato": "carla@x.com",
+        "idade": 35,
+        "moradia": "Apartamento",
+        "area_util": 100.0,
+        "tem_criancas": true
+    }
+]
