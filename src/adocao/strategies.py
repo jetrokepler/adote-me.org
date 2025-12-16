@@ -6,48 +6,86 @@ class EstrategiaTaxa(ABC):
     """Interface (Strategy) para cálculo de taxa de adoção."""
     
     @abstractmethod
-    def calcular(self, animal: Animal, adotante: Adotante) -> float:
+    def calcular(self, animal: Animal, adotante: Adotante) -> str:
+        """Calcula a taxa de adoção baseada na estratégia definida.
+
+        Args:
+            animal (Animal): O animal a ser adotado.
+            adotante (Adotante): O potencial adotante.
+
+        Returns:
+            str: O valor da taxa calculado.
+        """
         pass
 
 class TaxaPadrao(EstrategiaTaxa):
-    """Cobrança padrão do abrigo."""
-    def calcular(self, animal: Animal, adotante: Adotante) -> float:
+    """Implementa a cobrança padrão do abrigo."""
+
+    def calcular(self, animal: Animal, adotante: Adotante) -> str:
+        """Aplica a taxa padrão para adoções.
+
+        Args:
+            animal (Animal): O animal a ser adotado.
+            adotante (Adotante): O adotante.
+
+        Returns:
+            str: O valor da taxa padrão formatado.
+        """
         self.taxa = "50.00 (padrão)"
         return self.taxa
 
 class TaxaSenior(EstrategiaTaxa):
-    """
-    Desconto para adotantes idosos (>60 anos) para incentivar
-    a companhia na terceira idade.
-    """
-    def calcular(self, animal: Animal, adotante: Adotante) -> float:
+    """Implementa desconto para adotantes idosos para incentivar a companhia na terceira idade."""
+
+    def calcular(self, animal: Animal, adotante: Adotante) -> str:
+        """Calcula a taxa com desconto se o adotante for idoso.
+
+        Args:
+            animal (Animal): O animal a ser adotado.
+            adotante (Adotante): O adotante.
+
+        Returns:
+            str: O valor da taxa com desconto sênior.
+        """
         if adotante.idade >= 60:
             self.taxa = "20.00 (sênior)"
             return self.taxa 
 
 class TaxaPorteGrande(EstrategiaTaxa):
-    """
-    Animais de porte grande têm custos maiores, logo a taxa é maior.
-    """
-    def calcular(self, animal: Animal, adotante: Adotante) -> float:
+    """Implementa taxa diferenciada para animais de porte grande devido aos custos maiores."""
+
+    def calcular(self, animal: Animal, adotante: Adotante) -> str:
+        """Calcula a taxa majorada se o animal for de grande porte.
+
+        Args:
+            animal (Animal): O animal a ser adotado.
+            adotante (Adotante): O adotante.
+
+        Returns:
+            str: O valor da taxa para porte grande.
+        """
         if animal.porte == PorteAnimal.G:
             self.taxa = "80.00 (porte grande)"
             return self.taxa
 
-
 class FabricaTaxas:
-    """
-    Factory simples para decidir qual estratégia usar automaticamente.
-    """
+    """Factory para decidir qual estratégia de taxa usar automaticamente."""
+
     @staticmethod
     def obter_estrategia(animal: Animal, adotante: Adotante) -> EstrategiaTaxa:
-        # Prioridade 1: Se adotante for idoso, aplica desconto Sénior
+        """Determina a estratégia de taxa adequada baseada nas regras de prioridade.
+
+        Args:
+            animal (Animal): O animal a ser adotado.
+            adotante (Adotante): O adotante.
+
+        Returns:
+            EstrategiaTaxa: A instância da estratégia de taxa selecionada.
+        """
         if adotante.idade >= 60:
             return TaxaSenior()
         
-        # Prioridade 2: Se animal for Grande, aplica taxa maior
         if animal.porte == PorteAnimal.G:
             return TaxaPorteGrande()
             
-        # Padrão
         return TaxaPadrao()

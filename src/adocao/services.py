@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict, Any, Type
 from datetime import datetime, timedelta
 from .domain import Animal, Adotante, Cachorro, Gato
 from .enums import StatusAnimal, PorteAnimal, TipoMoradia
@@ -16,15 +16,38 @@ from .exceptions import (
 )
 
 class Observador(ABC):
+    """Interface abstrata para observadores do sistema (Observer Pattern)."""
+
     @abstractmethod
-    def atualizar(self, mensagem: str):
+    def atualizar(self, mensagem: str) -> None:
+        """Método chamado quando um evento ocorre no sujeito observado.
+
+        Args:
+            mensagem (str): A mensagem ou descrição do evento.
+        """
         pass
 
 class LoggerObserver(Observador):
-    def __init__(self, arquivo="historico_eventos.log"):
+    """Implementação concreta de Observador que registra eventos em um arquivo de log.
+
+    Attributes:
+        arquivo (str): Nome do arquivo de log.
+    """
+
+    def __init__(self, arquivo: str = "historico_eventos.log") -> None:
+        """Inicializa o LoggerObserver.
+
+        Args:
+            arquivo (str, optional): Caminho do arquivo de log. Defaults to "historico_eventos.log".
+        """
         self.arquivo = arquivo
 
-    def atualizar(self, mensagem: str):
+    def atualizar(self, mensagem: str) -> None:
+        """Escreve a mensagem formatada com timestamp no arquivo de log.
+
+        Args:
+            mensagem (str): A mensagem do evento a ser logada.
+        """
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_entry = f"[{timestamp}] {mensagem}\n"
         try:
@@ -38,7 +61,21 @@ class LoggerObserver(Observador):
             print(f"Erro ao gravar log: {e}")
 
 class SistemaAdocao:
-    def __init__(self):
+    """Classe principal (Fachada/Controller) que gerencia o sistema de adoção.
+
+    Responsável por coordenar repositórios, regras de negócio, configurações
+    e notificações de eventos.
+
+    Attributes:
+        settings (Dict[str, Any]): Configurações do sistema carregadas.
+        repo (Repositorio): Instância do repositório (SQLite ou JSON).
+        animais (List[Animal]): Lista de animais carregados em memória.
+        adotantes (List[Adotante]): Lista de adotantes carregados em memória.
+        observadores (List[Observador]): Lista de observadores registrados.
+    """
+
+    def __init__(self) -> None:
+        """Inicializa o sistema, carrega configurações e repositórios."""
         self.settings = self._carregar_settings()
         
         tipo_banco = self.settings.get("banco_tipo", "JSON").upper()
@@ -56,14 +93,29 @@ class SistemaAdocao:
         self.observadores: List[Observador] = []
         self.adicionar_observador(LoggerObserver())
 
-    def adicionar_observador(self, observador: Observador):
+    def adicionar_observador(self, observador: Observador) -> None:
+        """Registra um novo observador para receber notificações.
+
+        Args:
+            observador (Observador): Instância do observador a ser registrada.
+        """
         self.observadores.append(observador)
 
-    def notificar_observadores(self, evento: str):
+    def notificar_observadores(self, evento: str) -> None:
+        """Notifica todos os observadores registrados sobre um evento.
+
+        Args:
+            evento (str): Descrição do evento ocorrido.
+        """
         for obs in self.observadores:
             obs.atualizar(evento)
 
-    def _carregar_settings(self):
+    def _carregar_settings(self) -> Dict[str, Any]:
+        """Carrega as configurações do arquivo JSON ou cria o padrão se não existir.
+
+        Returns:
+            Dict[str, Any]: Dicionário contendo as configurações do sistema.
+        """
         padrao = {
             "banco_tipo": "JSON",
             "idade_minima": 18,
@@ -89,14 +141,28 @@ class SistemaAdocao:
             
         return padrao
 
-    def _salvar_settings_arquivo(self, dados):
+    def _salvar_settings_arquivo(self, dados: Dict[str, Any]) -> None:
+        """Salva as configurações no arquivo settings.json.
+
+        Args:
+            dados (Dict[str, Any]): Dicionário de configurações a ser salvo.
+        """
         try:
             with open("settings.json", "w", encoding='utf-8') as f:
                 json.dump(dados, f, indent=4, ensure_ascii=False)
         except Exception as e:
             print(f"Erro ao salvar settings: {e}")
 
-    def atualizar_configuracao(self, chave, novo_valor):
+    def atualizar_configuracao(self, chave: str, novo_valor: Any) -> Tuple[bool, str]:
+        """Atualiza uma chave específica nas configurações do sistema.
+
+        Args:
+            chave (str): A chave de configuração a ser alterada.
+            novo_valor (Any): O novo valor a ser atribuído.
+
+        Returns:
+            Tuple[bool, str]: (Sucesso, Mensagem de retorno).
+        """
         if chave in self.settings:
             tipo_original = type(self.settings[chave])
             
@@ -121,36 +187,91 @@ class SistemaAdocao:
             return False, "❌ Chave de configuração não encontrada."
 
     def buscar_animal(self, idx: int) -> Animal:
+        """Busca um animal pelo índice na lista em memória.
+
+        Args:
+            idx (int): Índice do animal.
+
+        Returns:
+            Animal: O objeto animal encontrado.
+
+        Raises:
+            EntidadeNaoEncontradaError: Se o índice for inválido.
+        """
         try:
             return self.animais[idx]
         except IndexError:
             raise EntidadeNaoEncontradaError(f"Animal com índice {idx} não encontrado.")
 
     def buscar_adotante(self, idx: int) -> Adotante:
+        """Busca um adotante pelo índice na lista em memória.
+
+        Args:
+            idx (int): Índice do adotante.
+
+        Returns:
+            Adotante: O objeto adotante encontrado.
+
+        Raises:
+            EntidadeNaoEncontradaError: Se o índice for inválido.
+        """
         try:
             return self.adotantes[idx]
         except IndexError:
             raise EntidadeNaoEncontradaError(f"Adotante com índice {idx} não encontrado.")
 
-    def cadastrar_cachorro(self, nome: str, raca: str, porte: PorteAnimal, temperamento: List[str], precisa_passeio: bool):
+    def cadastrar_cachorro(self, nome: str, raca: str, porte: PorteAnimal, temperamento: List[str], precisa_passeio: bool) -> None:
+        """Cadastra um novo cachorro no sistema e salva no repositório.
+
+        Args:
+            nome (str): Nome do cachorro.
+            raca (str): Raça do cachorro.
+            porte (PorteAnimal): Porte do animal.
+            temperamento (List[str]): Lista de temperamentos.
+            precisa_passeio (bool): Se necessita de passeio.
+        """
         novo_pet = Cachorro(nome, raca, StatusAnimal.DISPONIVEL, porte, temperamento, precisa_passeio)
         self.animais.append(novo_pet)
         self.repo.salvar_animais(self.animais)
         print(f"✅ Cachorro {nome} cadastrado com sucesso!")
 
-    def cadastrar_gato(self, nome: str, raca: str, porte: PorteAnimal, temperamento: List[str], independencia: int):
+    def cadastrar_gato(self, nome: str, raca: str, porte: PorteAnimal, temperamento: List[str], independencia: int) -> None:
+        """Cadastra um novo gato no sistema e salva no repositório.
+
+        Args:
+            nome (str): Nome do gato.
+            raca (str): Raça do gato.
+            porte (PorteAnimal): Porte do animal.
+            temperamento (List[str]): Lista de temperamentos.
+            independencia (int): Nível de independência.
+        """
         novo_pet = Gato(nome, raca, StatusAnimal.DISPONIVEL, porte, temperamento, independencia)
         self.animais.append(novo_pet)
         self.repo.salvar_animais(self.animais)
         print(f"✅ Gato {nome} cadastrado com sucesso!")
 
-    def cadastrar_adotante(self, nome: str, contato: str, idade: int, moradia: TipoMoradia, area_util: float, tem_criancas: bool):
+    def cadastrar_adotante(self, nome: str, contato: str, idade: int, moradia: TipoMoradia, area_util: float, tem_criancas: bool) -> None:
+        """Cadastra um novo adotante no sistema e salva no repositório.
+
+        Args:
+            nome (str): Nome do adotante.
+            contato (str): Contato.
+            idade (int): Idade.
+            moradia (TipoMoradia): Tipo de moradia.
+            area_util (float): Área útil em m².
+            tem_criancas (bool): Se possui crianças.
+        """
         novo_adotante = Adotante(nome, contato, idade, moradia, area_util, tem_criancas)
         self.adotantes.append(novo_adotante)
         self.repo.salvar_adotantes(self.adotantes)
         print(f"👤 Adotante {nome} cadastrado com sucesso!")
 
-    def excluir_animal(self, idx_animal: int):
+    def excluir_animal(self, idx_animal: int) -> None:
+        """Remove um animal do sistema pelo índice.
+
+        Args:
+            idx_animal (int): Índice do animal a ser removido.
+        """
         try:
             self.buscar_animal(idx_animal)
             removido = self.animais.pop(idx_animal)
@@ -159,7 +280,12 @@ class SistemaAdocao:
         except (ValueError, AdocaoError) as e:
             print(f"❌ Índice inválido ou erro: {e}")
 
-    def excluir_adotante(self, idx_adotante: int):
+    def excluir_adotante(self, idx_adotante: int) -> None:
+        """Remove um adotante do sistema pelo índice.
+
+        Args:
+            idx_adotante (int): Índice do adotante a ser removido.
+        """
         try:
             self.buscar_adotante(idx_adotante)
             removido = self.adotantes.pop(idx_adotante)
@@ -168,7 +294,17 @@ class SistemaAdocao:
         except (ValueError, AdocaoError) as e:
             print(f"❌ Erro: {e}")
 
-    def editar_animal(self, idx_animal: int, novo_nome=None, nova_raca=None, novo_porte=None, novo_temperamento=None, extra_dado=None):
+    def editar_animal(self, idx_animal: int, novo_nome: Optional[str] = None, nova_raca: Optional[str] = None, novo_porte: Optional[PorteAnimal] = None, novo_temperamento: Optional[List[str]] = None, extra_dado: Any = None) -> None:
+        """Edita os dados de um animal existente.
+
+        Args:
+            idx_animal (int): Índice do animal.
+            novo_nome (Optional[str], optional): Novo nome. Defaults to None.
+            nova_raca (Optional[str], optional): Nova raça. Defaults to None.
+            novo_porte (Optional[PorteAnimal], optional): Novo porte. Defaults to None.
+            novo_temperamento (Optional[List[str]], optional): Novo temperamento. Defaults to None.
+            extra_dado (Any, optional): Dado específico (passeio para Cães, independência para Gatos). Defaults to None.
+        """
         try:
             animal = self.buscar_animal(idx_animal)
             if novo_nome: animal._nome = novo_nome
@@ -186,7 +322,17 @@ class SistemaAdocao:
             print(f"✏️ Dados de {animal.nome} atualizados com sucesso!")
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
-    def editar_adotante(self, idx_adotante: int, novo_nome=None, novo_contato=None, nova_moradia=None, nova_area=None, novas_criancas=None):
+    def editar_adotante(self, idx_adotante: int, novo_nome: Optional[str] = None, novo_contato: Optional[str] = None, nova_moradia: Optional[TipoMoradia] = None, nova_area: Optional[float] = None, novas_criancas: Optional[bool] = None) -> None:
+        """Edita os dados de um adotante existente.
+
+        Args:
+            idx_adotante (int): Índice do adotante.
+            novo_nome (Optional[str], optional): Novo nome. Defaults to None.
+            novo_contato (Optional[str], optional): Novo contato. Defaults to None.
+            nova_moradia (Optional[TipoMoradia], optional): Nova moradia. Defaults to None.
+            nova_area (Optional[float], optional): Nova área útil. Defaults to None.
+            novas_criancas (Optional[bool], optional): Novo status de crianças. Defaults to None.
+        """
         try:
             adotante = self.buscar_adotante(idx_adotante)
             
@@ -206,13 +352,31 @@ class SistemaAdocao:
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
     def _buscar_por_indice(self, idx_animal: int, idx_adotante: Optional[int] = None) -> Tuple[Animal, Optional[Adotante]]:
+        """Método auxiliar para recuperar objetos pelos índices.
+
+        Args:
+            idx_animal (int): Índice do animal.
+            idx_adotante (Optional[int], optional): Índice do adotante. Defaults to None.
+
+        Returns:
+            Tuple[Animal, Optional[Adotante]]: Tupla contendo os objetos encontrados.
+        """
         animal = self.buscar_animal(idx_animal)
         adotante = None
         if idx_adotante is not None:
             adotante = self.buscar_adotante(idx_adotante)
         return animal, adotante
 
-    def _validar_politica_adocao(self, animal: Animal, adotante: Adotante):
+    def _validar_politica_adocao(self, animal: Animal, adotante: Adotante) -> None:
+        """Verifica se o adotante cumpre os requisitos para adotar o animal.
+
+        Args:
+            animal (Animal): O animal pretendido.
+            adotante (Adotante): O candidato à adoção.
+
+        Raises:
+            PoliticaNaoAtendidaError: Se algum critério (idade, moradia, segurança) não for atendido.
+        """
         if adotante.idade < self.settings["idade_minima"]:
             raise PoliticaNaoAtendidaError(f"Adotante deve ter >= {self.settings['idade_minima']} anos.")
 
@@ -228,6 +392,15 @@ class SistemaAdocao:
                 raise PoliticaNaoAtendidaError("Não permitido adotar animais 'ariscos' em casas com crianças.")
 
     def _calcular_compatibilidade(self, animal: Animal, adotante: Adotante) -> Tuple[int, List[str]]:
+        """Calcula um score de compatibilidade entre adotante e animal.
+
+        Args:
+            animal (Animal): O animal.
+            adotante (Adotante): O adotante.
+
+        Returns:
+            Tuple[int, List[str]]: Score (0-100) e lista de detalhes da pontuação.
+        """
         score = 0
         detalhes = []
         pesos = self.settings["pesos_compatibilidade"]
@@ -248,7 +421,13 @@ class SistemaAdocao:
         
         return min(score, 100), detalhes
 
-    def reservar_animal(self, idx_animal: int, idx_adotante: int):
+    def reservar_animal(self, idx_animal: int, idx_adotante: int) -> None:
+        """Tenta reservar um animal para um adotante ou sugere entrar na fila.
+
+        Args:
+            idx_animal (int): Índice do animal.
+            idx_adotante (int): Índice do adotante.
+        """
         try:
             animal, adotante = self._buscar_por_indice(idx_animal, idx_adotante)
             
@@ -277,7 +456,13 @@ class SistemaAdocao:
             
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
-    def realizar_adocao(self, idx_animal: int, idx_adotante: int):
+    def realizar_adocao(self, idx_animal: int, idx_adotante: int) -> None:
+        """Efetiva a adoção de um animal, calculando taxas e atualizando status.
+
+        Args:
+            idx_animal (int): Índice do animal.
+            idx_adotante (int): Índice do adotante.
+        """
         try:
             animal, adotante = self._buscar_por_indice(idx_animal, idx_adotante)
 
@@ -314,7 +499,13 @@ class SistemaAdocao:
 
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
-    def processar_devolucao(self, idx_animal: int, motivo: str):
+    def processar_devolucao(self, idx_animal: int, motivo: str) -> None:
+        """Processa a devolução de um animal adotado, definindo o novo status.
+
+        Args:
+            idx_animal (int): Índice do animal.
+            motivo (str): Motivo da devolução.
+        """
         try:
             animal = self.buscar_animal(idx_animal)
             if animal.status != StatusAnimal.ADOTADO:
@@ -342,7 +533,13 @@ class SistemaAdocao:
             
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
-    def entrar_fila_espera(self, idx_animal: int, idx_adotante: int):
+    def entrar_fila_espera(self, idx_animal: int, idx_adotante: int) -> None:
+        """Adiciona um adotante à fila de espera de um animal.
+
+        Args:
+            idx_animal (int): Índice do animal.
+            idx_adotante (int): Índice do adotante.
+        """
         try:
             animal, adotante = self._buscar_por_indice(idx_animal, idx_adotante)
             if animal.nome_reservante == adotante.nome:
@@ -368,7 +565,8 @@ class SistemaAdocao:
 
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
-    def processar_reservas_vencidas(self):
+    def processar_reservas_vencidas(self) -> None:
+        """Verifica reservas que excederam o tempo limite e passa para o próximo da fila."""
         print("🔄 Verificando validade das reservas...")
         agora = datetime.now()
         horas_limite = self.settings["reserva_horas"]
@@ -403,7 +601,12 @@ class SistemaAdocao:
         else:
             print("✅ Nenhuma reserva vencida encontrada.")
 
-    def visualizar_detalhes_fila(self, idx_animal: int):
+    def visualizar_detalhes_fila(self, idx_animal: int) -> None:
+        """Exibe detalhes da reserva atual e da fila de espera de um animal.
+
+        Args:
+            idx_animal (int): Índice do animal.
+        """
         try:
             animal = self.buscar_animal(idx_animal)
             print(f"\n📊 DETALHES DE: {animal.nome}")
@@ -428,7 +631,13 @@ class SistemaAdocao:
                     print(f"   {i+1}º. {adotante.nome} | Score: {score} | Desde: {dt_entr}")
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
-    def vacinar_animal(self, idx_animal: int, nome_vacina: str):
+    def vacinar_animal(self, idx_animal: int, nome_vacina: str) -> None:
+        """Aplica vacina em um animal, se a classe dele suportar.
+
+        Args:
+            idx_animal (int): Índice do animal.
+            nome_vacina (str): Nome da vacina.
+        """
         try:
             animal = self.buscar_animal(idx_animal)
             if hasattr(animal, 'vacinar'):
@@ -438,7 +647,12 @@ class SistemaAdocao:
             else: print(f"⚠️ {animal.nome} não pode ser vacinado.")
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
-    def treinar_animal(self, idx_animal: int):
+    def treinar_animal(self, idx_animal: int) -> None:
+        """Aplica treinamento em um animal, se a classe dele suportar.
+
+        Args:
+            idx_animal (int): Índice do animal.
+        """
         try:
             animal = self.buscar_animal(idx_animal)
             if hasattr(animal, 'treinar'):
@@ -448,7 +662,12 @@ class SistemaAdocao:
             else: print(f"⚠️ {animal.nome} não pode ser treinado.")
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
-    def gerar_relatorio_animais(self, apenas_adotados=False):
+    def gerar_relatorio_animais(self, apenas_adotados: bool = False) -> None:
+        """Gera um relatório impresso no console com o status dos animais.
+
+        Args:
+            apenas_adotados (bool, optional): Filtra apenas os adotados. Defaults to False.
+        """
         print("\n--- STATUS DO ABRIGO ---")
         contador = 0
         for i, a in enumerate(self.animais):
@@ -467,7 +686,8 @@ class SistemaAdocao:
         if contador == 0:
             print("   (Nenhum animal encontrado para este filtro)")
 
-    def listar_adotantes(self):
+    def listar_adotantes(self) -> None:
+        """Imprime a lista de adotantes cadastrados com alertas de elegibilidade."""
         print("\n--- ADOTANTES ---")
         for i, a in enumerate(self.adotantes):
             aviso = ""
@@ -475,9 +695,10 @@ class SistemaAdocao:
                 aviso = " ⚠️ [Menor de Idade - Adoção Bloqueada]"
             print(f"[{i}] {a.nome}, {a.idade} anos ({a.moradia.value}, {a.area_util}m²){aviso}")
 
-    def gerar_relatorios_estatisticos(self):
+    def gerar_relatorios_estatisticos(self) -> None:
+        """Gera relatórios estatísticos detalhados e salva em arquivo .txt."""
         linhas_relatorio = []
-        def log(texto):
+        def log(texto: str) -> None:
             print(texto)
             linhas_relatorio.append(texto)
 
@@ -524,7 +745,15 @@ class SistemaAdocao:
             print(f"\n💾 Relatório salvo com sucesso em: {caminho_completo}")
         except Exception as e: print(f"\n❌ Erro ao salvar arquivo de relatório: {e}")
 
-    def _calcular_taxa_adocao_por_tipo(self, classe_tipo):
+    def _calcular_taxa_adocao_por_tipo(self, classe_tipo: Type[Animal]) -> Dict[str, Any]:
+        """Calcula estatísticas de adoção para uma classe de animal específica.
+
+        Args:
+            classe_tipo (Type[Animal]): A classe (Cachorro ou Gato) para filtrar.
+
+        Returns:
+            Dict[str, Any]: Dicionário com total, adotados e taxa percentual.
+        """
         total = 0
         adotados = 0
         for animal in self.animais:
@@ -535,6 +764,11 @@ class SistemaAdocao:
         return {"total": total, "adotados": adotados, "taxa": round(taxa, 1)}
 
     def _calcular_tempo_medio_adocao(self) -> Optional[float]:
+        """Calcula o tempo médio entre cadastro e adoção baseado no histórico.
+
+        Returns:
+            Optional[float]: Média de dias ou None se não houver dados.
+        """
         total_dias = 0
         count = 0
         for animal in self.animais:
