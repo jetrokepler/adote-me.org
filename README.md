@@ -91,6 +91,7 @@ pip install -r requirements.txt
 
 ```bash
 python seed.py
+```
 
 
 ### 🧪 Executando os Testes
