@@ -1,4 +1,13 @@
+<div align="center">
+
 # 🐾 adote-me.org
+
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python\&logoColor=white)
+![Pytest](https://img.shields.io/badge/Pytest-tests-green?logo=pytest)
+![POO](https://img.shields.io/badge/Paradigma-POO-purple)
+![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow)
+![License](https://img.shields.io/badge/License-MIT-brightgreen)
+![Contributions](https://img.shields.io/badge/Contribui%C3%A7%C3%B5es-Bem--vindas-orange)
 
 Este é um sistema de linha de comando (CLI) para gerenciar o fluxo completo de um abrigo de animais. Ele controla desde o cadastro de animais e a triagem de adotantes até o processo de reserva, adoção e devolução.
 
@@ -6,46 +15,100 @@ Este é um sistema de linha de comando (CLI) para gerenciar o fluxo completo de 
 
 O objetivo principal é aplicar conceitos de Programação Orientada a Objetos (POO) para construir um sistema robusto e flexível. O projeto foca em modelar entidades do mundo real, gerenciar seus estados e implementar regras de negócio complexas de forma organizada e testável.
 
+</div>
+
 ## Estrutura de arquivos
 
 ```
-📁 projeto_adocao/
+📁 ADOTE-ME.ORG/
+│ 
 ├── 📄 .gitignore
 ├── 📄 README.md
 ├── 📄 requirements.txt
+├── 📄 pytest.ini
+├── 📄 seed.py
+├── 📄 settings.json
+├── 📄 adocao.db
+├── 📄 adotantes.json
+├── 📄 animais.json
 │
+├── 📁 dados/
+│    └── 📄 historico_eventos.log
+│
+├── 📁 relatorios/
+│    └── 📄 relatorio_2025-12-15_01-58-12.txt
+|
 ├── 📁 src/
-│   └── 📁 adocao/
-│       ├── 📄 __init__.py
-│       ├── 📄 enums.py         
-│       ├── 📄 domain.py        
-│       ├── 📄 strategies.py    
-│       ├── 📄 repositories.py  
-│       ├── 📄 services.py      
-│       └── 📄 main.py          
+│    └── 📁 adocao/
+│         ├── 📄 __init__.py
+│         ├── 📄 enums.py
+│         ├── 📄 domain.py
+│         ├── 📄 strategies.py
+│         ├── 📄 repositories.py
+│         ├── 📄 services.py
+│         ├── 📄 exceptions.py
+│         └── 📄 main.py
 │
-└── 📁 tests/
-    ├── 📄 __init__.py
-    ├── 📄 test_domain.py     
-    ├── 📄 test_services.py   
-    └── 📄 test_strategies.py 
+├── 📁 tests/
+     ├── 📄 __init__.py
+     ├── 📄 test_domain.py
+     ├── 📄 test_fila_priorizada.py
+     ├── 📄 test_observer.py
+     ├── 📄 test_services.py
+     └── 📄 test_strategies.py
 ```
+
+
 
 # 🎡 Funcionamento
 
-Abra o terminal, roda essa linha e fica sussa.
+### 1️⃣ Clone o repositório
 
-```python
-python -m src.adocao.main
+```bash
+git clone https://github.com/jetrokepler/adote-me.org.git
+cd seu-projeto
 ```
+
+### 2️⃣ Crie e ative o ambiente virtual
+
+```bash
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+# Linux / macOS
+source .venv/bin/activate
+```
+
+### 3️⃣ Instale as dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+
+
+### 🧪 Executando os Testes
+
+Todos os testes são feitos com **Pytest**:
+
+```bash
+pytest
+```
+
+Com relatório mais detalhado:
+
+```bash
+pytest -v
+```
+
+---
 
 # 🏛️ Arquitetura
 
-```mermaid
 classDiagram
-    direction LR
-
-    %% --- 1. Enumerações e Tipos ---
+    %% --- ENUMS ---
     class StatusAnimal {
         <<enumeration>>
         DISPONIVEL
@@ -55,202 +118,234 @@ classDiagram
         QUARENTENA
         INADOTAVEL
     }
+
     class PorteAnimal {
         <<enumeration>>
         P
         M
         G
     }
+
     class TipoMoradia {
         <<enumeration>>
         CASA
         APTO
     }
 
-    %% --- 2. Entidades Principais ---
-    class Pessoa {
-        <<abstract>>
-        -nome: str
-        -idade: int
-    }
-    class Adotante {
-        -moradia: TipoMoradia
-        -area_util: float
-        -experiencia_pets: bool
-        -criancas_em_casa: bool
-        -outros_animais: bool
-        +verificar_elegibilidade(politicas) bool
-    }
-    Pessoa <|-- Adotante
-    Adotante --> TipoMoradia
-
-    class Animal {
-        <<abstract>>
-        -id: int
-        -nome: str
-        -especie: str
-        -raca: str
-        -idade_meses: int
-        -porte: PorteAnimal
-        -status: StatusAnimal
-        -historico_eventos: list
-        -data_entrada: date
-        +mudar_status(novo_status)
-        +validar_transicao_status(novo_status) bool
-        +__str__() str
-        +__lt__(outro) bool
-        +__iter__() Iterator
-    }
-    Animal --> PorteAnimal
-    Animal --> StatusAnimal
-
+    %% --- MIXINS ---
     class VacinavelMixin {
-        <<mixin>>
-        -agenda_vacinas: dict
-        +vacinar(vacina)
+        +agenda_vacinas: Dict
+        +__init__()
+        +vacinar(nome_vacina)
     }
+
     class AdestravelMixin {
-        <<mixin>>
-        -nivel_adestramento: int
+        +nivel_adestramento: int
+        +__init__()
         +treinar()
     }
 
-    class Cachorro {
-        -necessidade_passeio: int
+    %% --- DOMÍNIO: PESSOAS ---
+    class Pessoa {
+        <<abstract>>
+        -_nome: str
+        -_contato: str
+        +__init__(nome, contato)
+        +nome() str
+        +contato() str
     }
-    class Gato {
-        -independencia: int
-    }
-    Animal <|-- Cachorro
-    Animal <|-- Gato
-    VacinavelMixin <|.. Cachorro
-    AdestravelMixin <|.. Cachorro
-    VacinavelMixin <|.. Gato
 
-    %% --- 3. Entidades de Transação ---
-    class Reserva {
-        -data_reserva: datetime
-        -data_expiracao: datetime
-        +esta_expirada() bool
+    class Adotante {
+        -_idade: int
+        -_moradia: TipoMoradia
+        -_area_util: float
+        -_tem_criancas: bool
+        +__init__(nome, contato, idade, moradia, area, kids)
+        +idade() int
+        +moradia() TipoMoradia
+        +area_util() float
+        +tem_criancas() bool
+        +to_dict() Dict
+        +from_dict(dados) Adotante$
+        +__str__() str
     }
-    class Adocao {
-        -data_adocao: datetime
-        -taxa_calculada: float
-        -contrato: str
-    }
-    class Devolucao {
-        -data_devolucao: datetime
-        -motivo: str
-    }
+
+    Pessoa <|-- Adotante
+
+    %% --- DOMÍNIO: ANIMAIS ---
     class FilaEspera {
-        -fila: PriorityQueue
-        +adicionar(adotante, pontuacao)
+        +interessados: List
+        +__init__()
+        +adicionar(adotante, score)
         +proximo() Adotante
         +__len__() int
+        +to_list_dict() List
     }
 
-    %% --- 4. Padrões de Projeto ---
-    
-    %% Strategy (Taxa)
-    class BaseFeeStrategy {
-        <<interface>>
-        +calcular_taxa(animal) float
+    class Animal {
+        <<abstract>>
+        -_nome: str
+        -_raca: str
+        -_status: StatusAnimal
+        -_porte: PorteAnimal
+        -_temperamento: List
+        +historico_eventos: List
+        +data_reserva: str
+        +nome_reservante: str
+        +fila_espera: FilaEspera
+        +__init__(nome, raca, status, porte, temp)
+        +nome() str
+        +status() StatusAnimal
+        +porte() PorteAnimal
+        +temperamento() List
+        +adicionar_evento(descricao)
+        +pode_mudar_para(novo_status) bool
+        +mudar_status(novo_status)
+        +to_dict()* Dict
+        +from_dict(dados)* Animal$
     }
-    class SeniorFee { +calcular_taxa(animal) float }
-    class PuppyFee { +calcular_taxa(animal) float }
-    class SpecialCareFee { +calcular_taxa(animal) float }
-    class DefaultFee { +calcular_taxa(animal) float }
-    BaseFeeStrategy <|.. SeniorFee
-    BaseFeeStrategy <|.. PuppyFee
-    BaseFeeStrategy <|.. SpecialCareFee
-    BaseFeeStrategy <|.. DefaultFee
 
-    %% Repository (Interfaces)
-    class AnimalRepository {
-        <<interface>>
-        +get(id)
-        +add(animal)
-        +list()
+    class Cachorro {
+        -_precisa_passeio: bool
+        +__init__(...)
+        +to_dict() Dict
+        +from_dict_concreto(dados) Cachorro$
+        +__str__() str
     }
-    class AdotanteRepository {
-        <<interface>>
-        +get(id)
-        +add(adotante)
-        +list()
-    }
-    class AdocaoRepository {
-        <<interface>>
-        +get(id)
-        +add(adocao)
-        +list()
-    }
-    
-    %% Repository (Implementações)
-    class JsonAnimalRepository { +JsonAnimalRepository(path) }
-    class SqliteAnimalRepository { +SqliteAnimalRepository(conn) }
-    class JsonAdotanteRepository { +JsonAdotanteRepository(path) }
-    class SqliteAdotanteRepository { +SqliteAdotanteRepository(conn) }
-    
-    AnimalRepository <|.. JsonAnimalRepository
-    AnimalRepository <|.. SqliteAnimalRepository
-    AdotanteRepository <|.. JsonAdotanteRepository
-    AdotanteRepository <|.. SqliteAdotanteRepository
-    %% ... (O mesmo para AdocaoRepository)
 
+    class Gato {
+        -_independencia: int
+        +__init__(...)
+        +to_dict() Dict
+        +from_dict_concreto(dados) Gato$
+        +__str__() str
+    }
 
-    %% --- 5. Serviços e Configuração ---
-    class Configuracoes {
-        +idade_minima_adotante: int
-        +duracao_reserva_horas: int
-        +pesos_compatibilidade: dict
-        +carregar_settings(arquivo)
+    %% Relacionamentos de Domínio
+    Animal <|-- Cachorro
+    Animal <|-- Gato
+    VacinavelMixin <|-- Cachorro
+    VacinavelMixin <|-- Gato
+    AdestravelMixin <|-- Cachorro
+    Animal *-- FilaEspera
+    Animal ..> StatusAnimal
+    Animal ..> PorteAnimal
+    Adotante ..> TipoMoradia
+
+    %% --- REPOSITORIES ---
+    class Repositorio {
+        <<interface>>
+        +salvar_animais(animais)
+        +carregar_animais() List
+        +salvar_adotantes(adotantes)
+        +carregar_adotantes() List
     }
-    class TriagemService {
-        +calcular_compatibilidade(adotante, animal, config) int
-        +validar_politicas(adotante, animal, config) bool
+
+    class RepositorioJSON {
+        +arquivo_animais: str
+        +arquivo_adotantes: str
+        +__init__()
+        +salvar_animais(animais)
+        +carregar_animais() List
+        +salvar_adotantes(adotantes)
+        +carregar_adotantes() List
     }
+
+    class RepositorioSQLite {
+        +db_name: str
+        +__init__()
+        -_get_conexao() Connection
+        -_inicializar_banco()
+        +salvar_animais(animais)
+        +carregar_animais() List
+        +salvar_adotantes(adotantes)
+        +carregar_adotantes() List
+    }
+
+    Repositorio <|.. RepositorioJSON
+    Repositorio <|.. RepositorioSQLite
+
+    %% --- STRATEGY (TAXAS) ---
+    class EstrategiaTaxa {
+        <<interface>>
+        +calcular(animal, adotante) str
+    }
+
+    class TaxaPadrao {
+        +calcular(animal, adotante) str
+    }
+    class TaxaSenior {
+        +calcular(animal, adotante) str
+    }
+    class TaxaPorteGrande {
+        +calcular(animal, adotante) str
+    }
+
+    class FabricaTaxas {
+        +obter_estrategia(animal, adotante) EstrategiaTaxa$
+    }
+
+    EstrategiaTaxa <|.. TaxaPadrao
+    EstrategiaTaxa <|.. TaxaSenior
+    EstrategiaTaxa <|.. TaxaPorteGrande
+    FabricaTaxas ..> EstrategiaTaxa : cria
+
+    %% --- OBSERVER ---
+    class Observador {
+        <<interface>>
+        +atualizar(mensagem)
+    }
+
+    class LoggerObserver {
+        +arquivo: str
+        +__init__(arquivo)
+        +atualizar(mensagem)
+    }
+
+    Observador <|.. LoggerObserver
+
+    %% --- FACADE (SISTEMA) ---
     class SistemaAdocao {
-        -repo_animais: AnimalRepository
-        -repo_adotantes: AdotanteRepository
-        -config: Configuracoes
-        +cadastrar_animal()
-        +cadastrar_adotante()
-        +reservar_animal(adotante_id, animal_id)
-        +efetivar_adocao(reserva_id, estrategia_taxa)
-        +registrar_devolucao()
-        +processar_expiracoes_reserva()
-        +gerar_relatorio_top5_compatibilidade()
+        +settings: Dict
+        +animais: List
+        +adotantes: List
+        +repo: Repositorio
+        +observadores: List
+        +__init__()
+        +adicionar_observador(observador)
+        +notificar_observadores(evento)
+        -_carregar_settings() Dict
+        -_salvar_settings_arquivo(dados)
+        +atualizar_configuracao(chave, valor)
+        +buscar_animal(idx) Animal
+        +buscar_adotante(idx) Adotante
+        +cadastrar_cachorro(nome, raca, porte, temp, passeio)
+        +cadastrar_gato(nome, raca, porte, temp, indep)
+        +cadastrar_adotante(nome, contato, idade, moradia, area, kids)
+        +excluir_animal(idx)
+        +excluir_adotante(idx)
+        +editar_animal(idx, ...)
+        +editar_adotante(idx, ...)
+        -_buscar_por_indice(idx_ani, idx_ado)
+        -_validar_politica_adocao(animal, adotante)
+        -_calcular_compatibilidade(animal, adotante)
+        +reservar_animal(idx_ani, idx_ado)
+        +realizar_adocao(idx_ani, idx_ado)
+        +processar_devolucao(idx_ani, motivo)
+        +entrar_fila_espera(idx_ani, idx_ado)
+        +processar_reservas_vencidas()
+        +visualizar_detalhes_fila(idx_ani)
+        +vacinar_animal(idx_ani, vacina)
+        +treinar_animal(idx_ani)
+        +gerar_relatorio_animais(apenas_adotados)
+        +listar_adotantes()
+        +gerar_relatorios_estatisticos()
+        -_calcular_taxa_adocao_por_tipo(classe)
+        -_calcular_tempo_medio_adocao()
     }
-    
-    %% --- 6. Exceções ---
-    class Exception { <<external>> }
-    class ReservaInvalidaError {}
-    class TransicaoDeEstadoInvalidaError {}
-    class PoliticaNaoAtendidaError {}
-    class RepositorioError {}
-    Exception <|-- ReservaInvalidaError
-    Exception <|-- TransicaoDeEstadoInvalidaError
-    Exception <|-- PoliticaNaoAtendidaError
-    Exception <|-- RepositorioError
 
-
-    %% --- 7. Relacionamentos Principais ---
-    SistemaAdocao --> "1" Configuracoes
-    SistemaAdocao --> "1" AnimalRepository
-    SistemaAdocao --> "1" AdotanteRepository
-    SistemaAdocao --> "1" AdocaoRepository
-    SistemaAdocao --> "1" TriagemService
-    SistemaAdocao ..> BaseFeeStrategy : usa
-
-    TriagemService --> Configuracoes
-
-    Reserva o-- "1" Adotante
-    Reserva o-- "1" Animal
-    
-    Adocao o-- "1" Adotante
-    Adocao o-- "1" Animal
-    
-    Devolucao o-- "1" Adocao
-    
-    FilaEspera o-- "1" Animal
-    FilaEspera ..> Adotante : "mantém na fila"
+    SistemaAdocao --> Repositorio : usa
+    SistemaAdocao --> Observador : notifica
+    SistemaAdocao ..> FabricaTaxas : usa
+    SistemaAdocao "1" o-- "*" Animal : gerencia
+    SistemaAdocao "1" o-- "*" Adotante : gerencia
