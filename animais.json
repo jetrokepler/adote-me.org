@@ -56,24 +56,13 @@
             "[2025-12-16 03:04] Tiago entrou na fila (Score: 80).",
             "[2025-12-16 03:04] Quintino entrou na fila (Score: 100).",
             "[2025-12-16 03:04] Gabriel entrou na fila (Score: 80).",
-            "[2025-12-16 03:04] Paula entrou na fila (Score: 100)."
+            "[2025-12-16 03:04] Paula entrou na fila (Score: 100).",
+            "[2025-12-16 03:38] Reserva expirada. Transferida p/ fila: Quintino"
         ],
         "vacinas": {},
-        "data_reserva": "2025-12-16T03:04:42.094434",
-        "nome_reservante": "Beto Lima",
+        "data_reserva": "2025-12-16T03:38:30.205179",
+        "nome_reservante": "Quintino",
         "fila_espera": [
-            {
-                "adotante": {
-                    "nome": "Quintino",
-                    "contato": "quin@x.com",
-                    "idade": 55,
-                    "moradia": "Casa",
-                    "area_util": 200.0,
-                    "tem_criancas": false
-                },
-                "score": 100,
-                "data_entrada": "2025-12-16T03:04:42.099269"
-            },
             {
                 "adotante": {
                     "nome": "Paula",
@@ -370,25 +359,14 @@
             "[2025-12-16 03:04] Cadastrado no sistema.",
             "[2025-12-16 03:04] Status alterado: Disponível -> Reservado",
             "[2025-12-16 03:04] Laura entrou na fila (Score: 100).",
-            "[2025-12-16 03:04] Sandra entrou na fila (Score: 100)."
+            "[2025-12-16 03:04] Sandra entrou na fila (Score: 100).",
+            "[2025-12-16 03:38] Reserva expirada. Transferida p/ fila: Laura"
         ],
         "vacinas": {},
         "nivel_adestramento": 0,
-        "data_reserva": "2025-12-16T03:04:42.105818",
-        "nome_reservante": "Helena",
+        "data_reserva": "2025-12-16T03:38:30.205179",
+        "nome_reservante": "Laura",
         "fila_espera": [
-            {
-                "adotante": {
-                    "nome": "Laura",
-                    "contato": "laura@x.com",
-                    "idade": 33,
-                    "moradia": "Casa",
-                    "area_util": 100.0,
-                    "tem_criancas": true
-                },
-                "score": 100,
-                "data_entrada": "2025-12-16T03:04:42.111084"
-            },
             {
                 "adotante": {
                     "nome": "Sandra",
@@ -546,17 +524,39 @@
         "tipo_classe": "Cachorro",
         "nome": "Totó",
         "raca": "SRD",
-        "status": "Disponível",
+        "status": "Adotado",
         "porte": "Médio",
         "temperamento": [
             "leal"
         ],
         "precisa_passeio": false,
         "historico": [
-            "[2025-12-16 03:04] Cadastrado no sistema."
+            "[2025-12-16 03:04] Cadastrado no sistema.",
+            "[2025-12-16 03:36] Status alterado: Disponível -> Adotado"
         ],
         "vacinas": {},
         "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "chico placenta",
+        "raca": "1",
+        "status": "Disponível",
+        "porte": "Pequeno",
+        "temperamento": [
+            "arisco"
+        ],
+        "independencia": 1,
+        "historico": [
+            "[2025-12-16 03:37] Cadastrado no sistema.",
+            "[2025-12-16 03:38] Status alterado: Disponível -> Reservado",
+            "[2025-12-16 03:38] Status alterado: Reservado -> Disponível",
+            "[2025-12-16 03:38] Reserva expirada. Animal liberado."
+        ],
+        "vacinas": {},
         "data_reserva": null,
         "nome_reservante": null,
         "fila_espera": []

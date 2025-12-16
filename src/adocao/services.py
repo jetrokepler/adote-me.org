@@ -6,6 +6,7 @@ from .domain import Animal, Adotante, Cachorro, Gato
 from .enums import StatusAnimal, PorteAnimal, TipoMoradia
 from .repositories import RepositorioJSON, RepositorioSQLite
 from .strategies import FabricaTaxas
+from abc import ABC, abstractmethod
 from .exceptions import (
     AdocaoError, 
     EntidadeNaoEncontradaError, 
@@ -13,6 +14,28 @@ from .exceptions import (
     ReservaInvalidaError, 
     TransicaoStatusError
 )
+
+class Observador(ABC):
+    @abstractmethod
+    def atualizar(self, mensagem: str):
+        pass
+
+class LoggerObserver(Observador):
+    def __init__(self, arquivo="historico_eventos.log"):
+        self.arquivo = arquivo
+
+    def atualizar(self, mensagem: str):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_entry = f"[{timestamp}] {mensagem}\n"
+        try:
+            pasta = "dados"
+            if not os.path.exists(pasta):
+                os.makedirs(pasta)
+            caminho = os.path.join(pasta, self.arquivo)
+            with open(caminho, "a", encoding="utf-8") as f:
+                f.write(log_entry)
+        except Exception as e:
+            print(f"Erro ao gravar log: {e}")
 
 class SistemaAdocao:
     def __init__(self):
@@ -29,6 +52,16 @@ class SistemaAdocao:
 
         self.animais: List[Animal] = self.repo.carregar_animais()
         self.adotantes: List[Adotante] = self.repo.carregar_adotantes()
+
+        self.observadores: List[Observador] = []
+        self.adicionar_observador(LoggerObserver())
+
+    def adicionar_observador(self, observador: Observador):
+        self.observadores.append(observador)
+
+    def notificar_observadores(self, evento: str):
+        for obs in self.observadores:
+            obs.atualizar(evento)
 
     def _carregar_settings(self):
         padrao = {
@@ -268,6 +301,8 @@ class SistemaAdocao:
             except:
                 texto_taxa = f"R$ {valor_taxa}"
 
+            self.notificar_observadores(f"ADOÇÃO: {adotante.nome} adotou {animal.nome}. Taxa: {texto_taxa}")
+
             print(f"🎉 ADOÇÃO SUCESSO! {adotante.nome} adotou {animal.nome}!")
             print("="*40)
             print("          RECIBO DE ADOÇÃO")
@@ -359,6 +394,8 @@ class SistemaAdocao:
                         print(f"🔓 {animal.nome} está DISPONÍVEL novamente.")
                         animal.adicionar_evento("Reserva expirada. Animal liberado.")
                     alterou = True
+
+                self.notificar_observadores(f"EXPIRAÇÃO: Reserva de {animal.nome} (Tutor: {old_dono}) venceu e foi cancelada.")
         
         if alterou:
             self.repo.salvar_animais(self.animais)

@@ -1,5 +1,5 @@
 {
-    "banco_tipo": "JSON",
+    "banco_tipo": "SQLITE",
     "idade_minima": 18,
     "reserva_horas": 0,
     "area_minima_g": 40.0,
