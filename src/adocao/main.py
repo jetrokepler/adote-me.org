@@ -1,7 +1,20 @@
-from .services import SistemaAdocao
-from .enums import PorteAnimal, TipoMoradia, StatusAnimal
-from .domain import Cachorro, Gato
-from .exceptions import AdocaoError
+import sys
+import os
+
+# Garante que o Python encontre o pacote 'src'
+sys.path.append(os.getcwd())
+
+try:
+    # Ajuste dos imports para funcionar com a nova estrutura de pastas
+    from src.adocao.services import SistemaAdocao
+    from src.adocao.enums import PorteAnimal, TipoMoradia, StatusAnimal
+    from src.adocao.domain import Cachorro, Gato
+    from src.adocao.exceptions import AdocaoError
+except ImportError as e:
+    print("\n❌ Erro de Importação!")
+    print("Certifique-se de executar este arquivo a partir da raiz do projeto.")
+    print(f"Detalhe: {e}")
+    sys.exit(1)
 
 # Função auxiliar para garantir a escolha numérica do temperamento
 def escolher_temperamento_numerico():
@@ -24,7 +37,7 @@ def menu_configuracoes(sistema):
         print("\n⚙️  --- EDITOR DE CONFIGURAÇÕES (settings.json) ---")
         configs = sistema.settings
         
-        # FILTRO: Só pega as chaves que NÃO são dicionários (esconde os pesos complexos)
+        # FILTRO: Só pega as chaves que NÃO são dicionários
         chaves_editaveis = [k for k, v in configs.items() if not isinstance(v, dict)]
         
         # Lista apenas as configurações simples
@@ -48,7 +61,21 @@ def menu_configuracoes(sistema):
                 print(f"\nAlterando: {chave_selecionada}")
                 print(f"Valor atual: {valor_atual} (Tipo: {type(valor_atual).__name__})")
                 
-                novo_valor = input(f"👉 Digite o novo valor para '{chave_selecionada}': ")
+                if chave_selecionada == "banco_tipo":
+                    print("Opções disponíveis:")
+                    print("1. JSON")
+                    print("2. SQLITE")
+                    sel = input("👉 Escolha (1 ou 2): ").strip()
+                    
+                    if sel == "1":
+                        novo_valor = "JSON"
+                    elif sel == "2":
+                        novo_valor = "SQLITE"
+                    else:
+                        print("❌ Opção inválida. Operação cancelada.")
+                        continue 
+                else:
+                    novo_valor = input(f"👉 Digite o novo valor para '{chave_selecionada}': ")
                 
                 sucesso, msg = sistema.atualizar_configuracao(chave_selecionada, novo_valor)
                 print(msg)
@@ -75,7 +102,8 @@ def main():
         ( •ᴥ•)
         / >🎀   [ {G1}a{G2}d{G3}o{G4}t{G1}e{G2}-{G3}m{G4}e{G1}.{G2}o{G3}r{G4}g{RESET} ]
         """)
-        print(f"\n=== 🐾 {G1}MENU PRINCIPAL{RESET} ===")
+        # Mostra qual banco está sendo usado no título
+        print(f"\n=== 🐾 {G1}MENU PRINCIPAL{RESET} (Banco: {sistema.settings.get('banco_tipo', 'JSON')}) ===")
         print("1. Cadastrar Cachorro")
         print("2. Cadastrar Gato")
         print("3. Cadastrar Adotante")
@@ -93,7 +121,7 @@ def main():
         print("12. 📊 VISUALIZAR Detalhes da Fila/Reserva")
         print("13. 🔄 Processar Reservas Vencidas")
         print("14. 📈 Gerar Relatórios Consolidados")
-        print("15. ⚙️  Configurações")  # <--- NOVA LINHA
+        print("15. ⚙️  Configurações") 
         print("-" * 25)
         print("0. Sair")
         

@@ -1,0 +1,21 @@
+
+==================================================
+📊 RELATÓRIOS ESTATÍSTICOS DO ABRIGO
+Data de Geração: 16/12/2025 02:52:12
+==================================================
+
+🏆 TOP 5 - ANIMAIS MAIS POPULARES (Maiores Filas)
+   (Nenhum animal com fila de espera no momento)
+
+📈 TAXA DE ADOÇÃO POR ESPÉCIE
+   🐶 Cães:  0/1 (0.0%)
+   🐱 Gatos: 0/0 (0.0%)
+
+⏱️  TEMPO MÉDIO ATÉ A ADOÇÃO
+   (Dados insuficientes para cálculo)
+
+⚠️  DEVOLUÇÕES E ANIMAIS INADOTÁVEIS
+   🏥 Em Quarentena (Saúde): 0
+   ⛔ Inadotáveis (Comportamento): 0
+   🔙 Devolvidos (Aguardando): 0
+==================================================

@@ -4,7 +4,7 @@ from typing import List, Tuple, Optional
 from datetime import datetime, timedelta
 from .domain import Animal, Adotante, Cachorro, Gato
 from .enums import StatusAnimal, PorteAnimal, TipoMoradia
-from .repositories import Repositorio
+from .repositories import RepositorioJSON, RepositorioSQLite
 from .strategies import FabricaTaxas
 from .exceptions import (
     AdocaoError, 
@@ -16,16 +16,21 @@ from .exceptions import (
 
 class SistemaAdocao:
     def __init__(self):
-        self.repo = Repositorio()
+        self.settings = self._carregar_settings()
+        
+        tipo_banco = self.settings.get("banco_tipo", "JSON").upper()
+        
+        if tipo_banco == "SQLITE":
+            print("💾 Usando Banco de Dados SQLite")
+            self.repo = RepositorioSQLite()
+        else:
+            print("💾 Usando Arquivos JSON")
+            self.repo = RepositorioJSON()
+
         self.animais: List[Animal] = self.repo.carregar_animais()
         self.adotantes: List[Adotante] = self.repo.carregar_adotantes()
-        
-        # --- CARREGAMENTO DE CONFIGURAÇÕES (CORREÇÃO DO ERRO) ---
-        self.settings = self._carregar_settings()
 
-    # --- GERENCIAMENTO DE CONFIGURAÇÕES ---
     def _carregar_settings(self):
-        """Carrega configurações ou cria padrão se não existir"""
         padrao = {
             "banco_tipo": "JSON",
             "idade_minima": 18,
@@ -46,14 +51,12 @@ class SistemaAdocao:
         except Exception as e:
             print(f"⚠️ Erro ao ler settings.json: {e}")
         
-        # Garante que o arquivo exista
         if not os.path.exists("settings.json"):
             self._salvar_settings_arquivo(padrao)
             
         return padrao
 
     def _salvar_settings_arquivo(self, dados):
-        """Escreve as configurações no disco"""
         try:
             with open("settings.json", "w", encoding='utf-8') as f:
                 json.dump(dados, f, indent=4, ensure_ascii=False)
@@ -61,12 +64,10 @@ class SistemaAdocao:
             print(f"Erro ao salvar settings: {e}")
 
     def atualizar_configuracao(self, chave, novo_valor):
-        """Método chamado pelo menu para alterar uma regra"""
         if chave in self.settings:
             tipo_original = type(self.settings[chave])
             
             try:
-                # Converte o input (string) para o tipo correto (int, float, bool)
                 if tipo_original == int:
                     valor_convertido = int(novo_valor)
                 elif tipo_original == float:
@@ -78,7 +79,6 @@ class SistemaAdocao:
                 else:
                     valor_convertido = str(novo_valor)
                 
-                # Atualiza memória e disco
                 self.settings[chave] = valor_convertido
                 self._salvar_settings_arquivo(self.settings)
                 return True, f"✅ '{chave}' atualizado para: {valor_convertido}"
@@ -87,7 +87,6 @@ class SistemaAdocao:
         else:
             return False, "❌ Chave de configuração não encontrada."
 
-    # --- MÉTODOS PÚBLICOS DE BUSCA ---
     def buscar_animal(self, idx: int) -> Animal:
         try:
             return self.animais[idx]
@@ -100,7 +99,6 @@ class SistemaAdocao:
         except IndexError:
             raise EntidadeNaoEncontradaError(f"Adotante com índice {idx} não encontrado.")
 
-    # --- CADASTROS ---
     def cadastrar_cachorro(self, nome: str, raca: str, porte: PorteAnimal, temperamento: List[str], precisa_passeio: bool):
         novo_pet = Cachorro(nome, raca, StatusAnimal.DISPONIVEL, porte, temperamento, precisa_passeio)
         self.animais.append(novo_pet)
@@ -119,7 +117,6 @@ class SistemaAdocao:
         self.repo.salvar_adotantes(self.adotantes)
         print(f"👤 Adotante {nome} cadastrado com sucesso!")
 
-    # --- CRUD COMPLETO ---
     def excluir_animal(self, idx_animal: int):
         try:
             self.buscar_animal(idx_animal)
@@ -183,7 +180,6 @@ class SistemaAdocao:
         return animal, adotante
 
     def _validar_politica_adocao(self, animal: Animal, adotante: Adotante):
-        # Validação usando as CONFIGURAÇÕES CARREGADAS (self.settings)
         if adotante.idade < self.settings["idade_minima"]:
             raise PoliticaNaoAtendidaError(f"Adotante deve ter >= {self.settings['idade_minima']} anos.")
 
