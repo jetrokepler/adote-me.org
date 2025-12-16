@@ -87,6 +87,10 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### 🌳 Semeando o db
+
+```bash
+python seed.py
 
 
 ### 🧪 Executando os Testes
@@ -103,7 +107,6 @@ Com relatório mais detalhado:
 pytest -v
 ```
 
----
 
 # 🏛️ Arquitetura
 
