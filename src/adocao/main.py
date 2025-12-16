@@ -18,7 +18,48 @@ def escolher_temperamento_numerico():
     else:
         temp_str = input("Digite o temperamento (ex: brincalhão): ")
         return [t.strip() for t in temp_str.split(",")]
-
+    
+def menu_configuracoes(sistema):
+    while True:
+        print("\n⚙️  --- EDITOR DE CONFIGURAÇÕES (settings.json) ---")
+        configs = sistema.settings
+        
+        # FILTRO: Só pega as chaves que NÃO são dicionários (esconde os pesos complexos)
+        chaves_editaveis = [k for k, v in configs.items() if not isinstance(v, dict)]
+        
+        # Lista apenas as configurações simples
+        for i, chave in enumerate(chaves_editaveis):
+            valor = configs[chave]
+            print(f"{i+1}. {chave.ljust(20)} : {valor}")
+        
+        print("0. Voltar")
+        
+        escolha = input("\nQual item deseja alterar? (Digite o número): ")
+        
+        if escolha == '0':
+            break
+            
+        try:
+            idx = int(escolha) - 1
+            if 0 <= idx < len(chaves_editaveis):
+                chave_selecionada = chaves_editaveis[idx]
+                valor_atual = configs[chave_selecionada]
+                
+                print(f"\nAlterando: {chave_selecionada}")
+                print(f"Valor atual: {valor_atual} (Tipo: {type(valor_atual).__name__})")
+                
+                novo_valor = input(f"👉 Digite o novo valor para '{chave_selecionada}': ")
+                
+                sucesso, msg = sistema.atualizar_configuracao(chave_selecionada, novo_valor)
+                print(msg)
+                
+                if sucesso and chave_selecionada == "banco_tipo":
+                    print("⚠️  AVISO: A alteração de Banco de Dados requer reinicialização do sistema.")
+            else:
+                print("❌ Número inválido.")
+        except ValueError:
+            print("❌ Digite um número válido.")
+            
 def main():
     sistema = SistemaAdocao()
 
@@ -52,6 +93,7 @@ def main():
         print("12. 📊 VISUALIZAR Detalhes da Fila/Reserva")
         print("13. 🔄 Processar Reservas Vencidas")
         print("14. 📈 Gerar Relatórios Consolidados")
+        print("15. ⚙️  Configurações")  # <--- NOVA LINHA
         print("-" * 25)
         print("0. Sair")
         
@@ -296,6 +338,9 @@ def main():
 
         elif opcao == "14":
             sistema.gerar_relatorios_estatisticos()
+
+        elif opcao == "15":
+            menu_configuracoes(sistema)
 
         elif opcao == "0":
             print(f"\n{G4}Saindo... Seus dados estão salvos! 💾{RESET}")

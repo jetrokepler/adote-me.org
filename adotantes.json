@@ -158,5 +158,21 @@
         "moradia": "Apartamento",
         "area_util": 100.0,
         "tem_criancas": true
+    },
+    {
+        "nome": "a",
+        "contato": "a",
+        "idade": 17,
+        "moradia": "Casa",
+        "area_util": 100.0,
+        "tem_criancas": true
+    },
+    {
+        "nome": "s",
+        "contato": "45",
+        "idade": 45,
+        "moradia": "Casa",
+        "area_util": 333.0,
+        "tem_criancas": true
     }
 ]

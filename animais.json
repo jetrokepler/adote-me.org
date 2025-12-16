@@ -451,14 +451,15 @@
         "tipo_classe": "Cachorro",
         "nome": "Zeus",
         "raca": "Husky",
-        "status": "Disponível",
+        "status": "Adotado",
         "porte": "Grande",
         "temperamento": [
             "agitado"
         ],
         "precisa_passeio": true,
         "historico": [
-            "[2025-12-16 01:01] Cadastrado no sistema."
+            "[2025-12-16 01:01] Cadastrado no sistema.",
+            "[2025-12-16 01:52] Status alterado: Disponível -> Adotado"
         ],
         "vacinas": {},
         "nivel_adestramento": 0,
@@ -557,6 +558,25 @@
         ],
         "vacinas": {},
         "nivel_adestramento": 0,
+        "data_reserva": null,
+        "nome_reservante": null,
+        "fila_espera": []
+    },
+    {
+        "tipo_classe": "Gato",
+        "nome": "Mel",
+        "raca": "fuzil",
+        "status": "Adotado",
+        "porte": "Médio",
+        "temperamento": [
+            "calmo"
+        ],
+        "independencia": 3,
+        "historico": [
+            "[2025-12-16 01:45] Cadastrado no sistema.",
+            "[2025-12-16 01:53] Status alterado: Disponível -> Adotado"
+        ],
+        "vacinas": {},
         "data_reserva": null,
         "nome_reservante": null,
         "fila_espera": []
