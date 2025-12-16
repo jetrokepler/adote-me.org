@@ -107,6 +107,8 @@ pytest -v
 
 # 🏛️ Arquitetura
 
+
+```mermaid
 classDiagram
 
     %% ENUMS
@@ -242,3 +244,4 @@ classDiagram
 
     SistemaAdocao --> Repositorio
     SistemaAdocao --> Observador
+```
