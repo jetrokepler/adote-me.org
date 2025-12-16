@@ -113,7 +113,7 @@ pytest -v
 Esse é o comando que incializa o progama.
 
 ```bash
-python src.adocao.main
+python -m src.adocao.main
 ```
 
 
