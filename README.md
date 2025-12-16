@@ -108,6 +108,14 @@ Com relatório mais detalhado:
 pytest -v
 ```
 
+### 🧪 Modo on
+
+Esse é o comando que incializa o progama.
+
+```bash
+python src.adocao.main
+```
+
 
 # 🏛️ Arquitetura
 
