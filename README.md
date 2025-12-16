@@ -109,7 +109,7 @@ pytest -v
 
 classDiagram
 
-    %% --- ENUMS ---
+    %% ENUMS
     class StatusAnimal {
         <<enumeration>>
         DISPONIVEL
@@ -133,222 +133,112 @@ classDiagram
         APTO
     }
 
-    %% --- MIXINS ---
+    %% MIXINS
     class VacinavelMixin {
-        +agenda_vacinas: Dict
-        +__init__()
-        +vacinar(nome_vacina)
+        agenda_vacinas
+        vacinar()
     }
 
     class AdestravelMixin {
-        +nivel_adestramento: int
-        +__init__()
-        +treinar()
+        nivel_adestramento
+        treinar()
     }
 
-    %% --- DOMÍNIO: PESSOAS ---
+    %% PESSOAS
     class Pessoa {
         <<abstract>>
-        -_nome: str
-        -_contato: str
-        +__init__(nome, contato)
-        +nome() str
-        +contato() str
+        nome
+        contato
     }
 
     class Adotante {
-        -_idade: int
-        -_moradia: TipoMoradia
-        -_area_util: float
-        -_tem_criancas: bool
-        +__init__(nome, contato, idade, moradia, area, kids)
-        +idade() int
-        +moradia() TipoMoradia
-        +area_util() float
-        +tem_criancas() bool
-        +to_dict() Dict
-        +from_dict(dados) Adotante$
-        +__str__() str
+        idade
+        moradia
+        area_util
+        tem_criancas
+        to_dict()
+        from_dict()
     }
 
     Pessoa <|-- Adotante
 
-    %% --- DOMÍNIO: ANIMAIS ---
+    %% ANIMAIS
     class FilaEspera {
-        +interessados: List
-        +__init__()
-        +adicionar(adotante, score)
-        +proximo() Adotante
-        +__len__() int
-        +to_list_dict() List
+        interessados
+        adicionar()
+        proximo()
     }
 
     class Animal {
         <<abstract>>
-        -_nome: str
-        -_raca: str
-        -_status: StatusAnimal
-        -_porte: PorteAnimal
-        -_temperamento: List
-        +historico_eventos: List
-        +data_reserva: str
-        +nome_reservante: str
-        +fila_espera: FilaEspera
-        +__init__(nome, raca, status, porte, temp)
-        +nome() str
-        +status() StatusAnimal
-        +porte() PorteAnimal
-        +temperamento() List
-        +adicionar_evento(descricao)
-        +pode_mudar_para(novo_status) bool
-        +mudar_status(novo_status)
-        +to_dict()* Dict
-        +from_dict(dados)* Animal$
+        nome
+        raca
+        status
+        porte
+        temperamento
+        adicionar_evento()
+        mudar_status()
     }
 
     class Cachorro {
-        -_precisa_passeio: bool
-        +__init__(...)
-        +to_dict() Dict
-        +from_dict_concreto(dados) Cachorro$
-        +__str__() str
+        precisa_passeio
     }
 
     class Gato {
-        -_independencia: int
-        +__init__(...)
-        +to_dict() Dict
-        +from_dict_concreto(dados) Gato$
-        +__str__() str
+        independencia
     }
 
-    %% Relacionamentos de Domínio
     Animal <|-- Cachorro
     Animal <|-- Gato
-    VacinavelMixin <|-- Cachorro
-    VacinavelMixin <|-- Gato
-    AdestravelMixin <|-- Cachorro
     Animal *-- FilaEspera
-    Animal ..> StatusAnimal
-    Animal ..> PorteAnimal
-    Adotante ..> TipoMoradia
 
-    %% --- REPOSITORIES ---
+    %% REPOSITORY
     class Repositorio {
         <<interface>>
-        +salvar_animais(animais)
-        +carregar_animais() List
-        +salvar_adotantes(adotantes)
-        +carregar_adotantes() List
+        salvar_animais()
+        carregar_animais()
+        salvar_adotantes()
+        carregar_adotantes()
     }
 
-    class RepositorioJSON {
-        +arquivo_animais: str
-        +arquivo_adotantes: str
-        +__init__()
-        +salvar_animais(animais)
-        +carregar_animais() List
-        +salvar_adotantes(adotantes)
-        +carregar_adotantes() List
-    }
-
-    class RepositorioSQLite {
-        +db_name: str
-        +__init__()
-        -_get_conexao() Connection
-        -_inicializar_banco()
-        +salvar_animais(animais)
-        +carregar_animais() List
-        +salvar_adotantes(adotantes)
-        +carregar_adotantes() List
-    }
+    class RepositorioJSON
+    class RepositorioSQLite
 
     Repositorio <|.. RepositorioJSON
     Repositorio <|.. RepositorioSQLite
 
-    %% --- STRATEGY (TAXAS) ---
+    %% STRATEGY
     class EstrategiaTaxa {
         <<interface>>
-        +calcular(animal, adotante) str
+        calcular()
     }
 
-    class TaxaPadrao {
-        +calcular(animal, adotante) str
-    }
-
-    class TaxaSenior {
-        +calcular(animal, adotante) str
-    }
-
-    class TaxaPorteGrande {
-        +calcular(animal, adotante) str
-    }
-
-    class FabricaTaxas {
-        +obter_estrategia(animal, adotante) EstrategiaTaxa$
-    }
+    class TaxaPadrao
+    class TaxaSenior
+    class TaxaPorteGrande
 
     EstrategiaTaxa <|.. TaxaPadrao
     EstrategiaTaxa <|.. TaxaSenior
     EstrategiaTaxa <|.. TaxaPorteGrande
-    FabricaTaxas ..> EstrategiaTaxa : cria
 
-    %% --- OBSERVER ---
+    %% OBSERVER
     class Observador {
         <<interface>>
-        +atualizar(mensagem)
+        atualizar()
     }
 
-    class LoggerObserver {
-        +arquivo: str
-        +__init__(arquivo)
-        +atualizar(mensagem)
-    }
+    class LoggerObserver
 
     Observador <|.. LoggerObserver
 
-    %% --- FACADE (SISTEMA) ---
+    %% SISTEMA
     class SistemaAdocao {
-        +settings: Dict
-        +animais: List
-        +adotantes: List
-        +repo: Repositorio
-        +observadores: List
-        +__init__()
-        +adicionar_observador(observador)
-        +notificar_observadores(evento)
-        -_carregar_settings() Dict
-        -_salvar_settings_arquivo(dados)
-        +atualizar_configuracao(chave, valor)
-        +buscar_animal(idx) Animal
-        +buscar_adotante(idx) Adotante
-        +cadastrar_cachorro(nome, raca, porte, temp, passeio)
-        +cadastrar_gato(nome, raca, porte, temp, indep)
-        +cadastrar_adotante(nome, contato, idade, moradia, area, kids)
-        +excluir_animal(idx)
-        +excluir_adotante(idx)
-        +editar_animal(idx, ...)
-        +editar_adotante(idx, ...)
-        -_buscar_por_indice(idx_ani, idx_ado)
-        -_validar_politica_adocao(animal, adotante)
-        -_calcular_compatibilidade(animal, adotante)
-        +reservar_animal(idx_ani, idx_ado)
-        +realizar_adocao(idx_ani, idx_ado)
-        +processar_devolucao(idx_ani, motivo)
-        +entrar_fila_espera(idx_ani, idx_ado)
-        +processar_reservas_vencidas()
-        +visualizar_detalhes_fila(idx_ani)
-        +vacinar_animal(idx_ani, vacina)
-        +treinar_animal(idx_ani)
-        +gerar_relatorio_animais(apenas_adotados)
-        +listar_adotantes()
-        +gerar_relatorios_estatisticos()
-        -_calcular_taxa_adocao_por_tipo(classe)
-        -_calcular_tempo_medio_adocao()
+        animais
+        adotantes
+        reservar_animal()
+        realizar_adocao()
+        gerar_relatorios()
     }
 
-    SistemaAdocao --> Repositorio : usa
-    SistemaAdocao --> Observador : notifica
-    SistemaAdocao ..> FabricaTaxas : usa
-    SistemaAdocao "1" o-- "*" Animal : gerencia
-    SistemaAdocao "1" o-- "*" Adotante : gerencia
+    SistemaAdocao --> Repositorio
+    SistemaAdocao --> Observador
