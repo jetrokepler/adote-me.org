@@ -108,6 +108,7 @@ pytest -v
 # 🏛️ Arquitetura
 
 classDiagram
+
     %% --- ENUMS ---
     class StatusAnimal {
         <<enumeration>>
@@ -274,9 +275,11 @@ classDiagram
     class TaxaPadrao {
         +calcular(animal, adotante) str
     }
+
     class TaxaSenior {
         +calcular(animal, adotante) str
     }
+
     class TaxaPorteGrande {
         +calcular(animal, adotante) str
     }
