@@ -39,6 +39,21 @@ class SistemaAdocao:
         except Exception as e:
             print(f"⚠️ Erro ao ler settings.json: {e}")
 
+    # --- MÉTODOS PÚBLICOS DE BUSCA (Para uso do Main) ---
+    def buscar_animal(self, idx: int) -> Animal:
+        """Busca animal pelo índice. Lança erro se não existir."""
+        try:
+            return self.animais[idx]
+        except IndexError:
+            raise EntidadeNaoEncontradaError(f"Animal com índice {idx} não encontrado.")
+
+    def buscar_adotante(self, idx: int) -> Adotante:
+        """Busca adotante pelo índice. Lança erro se não existir."""
+        try:
+            return self.adotantes[idx]
+        except IndexError:
+            raise EntidadeNaoEncontradaError(f"Adotante com índice {idx} não encontrado.")
+
     # --- CADASTROS ---
     def cadastrar_cachorro(self, nome: str, raca: str, porte: PorteAnimal, temperamento: List[str], precisa_passeio: bool):
         novo_pet = Cachorro(nome, raca, StatusAnimal.DISPONIVEL, porte, temperamento, precisa_passeio)
@@ -61,26 +76,25 @@ class SistemaAdocao:
     # --- CRUD COMPLETO ---
     def excluir_animal(self, idx_animal: int):
         try:
-            self._buscar_por_indice(idx_animal)
+            self.buscar_animal(idx_animal) # Verifica existência primeiro
             removido = self.animais.pop(idx_animal)
             self.repo.salvar_animais(self.animais)
             print(f"🗑️ Animal '{removido.nome}' removido com sucesso!")
         except (ValueError, AdocaoError) as e:
-            print(f"❌ Índice inválido ou erro: {e}")
+            print(f"❌ {e}")
 
     def excluir_adotante(self, idx_adotante: int):
         try:
-            if idx_adotante < 0 or idx_adotante >= len(self.adotantes):
-                raise EntidadeNaoEncontradaError("Índice de adotante inválido.")
+            self.buscar_adotante(idx_adotante) # Verifica existência primeiro
             removido = self.adotantes.pop(idx_adotante)
             self.repo.salvar_adotantes(self.adotantes)
             print(f"🗑️ Adotante '{removido.nome}' removido com sucesso!")
         except (ValueError, AdocaoError) as e:
-            print(f"❌ Erro: {e}")
+            print(f"❌ {e}")
 
     def editar_animal(self, idx_animal: int, novo_nome=None, nova_raca=None, novo_porte=None, novo_temperamento=None, extra_dado=None):
         try:
-            animal, _ = self._buscar_por_indice(idx_animal)
+            animal = self.buscar_animal(idx_animal)
             if novo_nome: animal._nome = novo_nome
             if nova_raca: animal._raca = nova_raca
             if novo_porte: animal._porte = novo_porte
@@ -98,9 +112,7 @@ class SistemaAdocao:
 
     def editar_adotante(self, idx_adotante: int, novo_nome=None, novo_contato=None, nova_moradia=None, nova_area=None, novas_criancas=None):
         try:
-            if idx_adotante < 0 or idx_adotante >= len(self.adotantes):
-                raise EntidadeNaoEncontradaError("Índice de adotante inválido.")
-            adotante = self.adotantes[idx_adotante]
+            adotante = self.buscar_adotante(idx_adotante)
             
             if novo_nome:
                 adotante._nome = novo_nome
@@ -118,18 +130,11 @@ class SistemaAdocao:
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
     def _buscar_por_indice(self, idx_animal: int, idx_adotante: Optional[int] = None) -> Tuple[Animal, Optional[Adotante]]:
-        try:
-            animal = self.animais[idx_animal]
-        except IndexError:
-            raise EntidadeNaoEncontradaError(f"Animal com índice {idx_animal} não encontrado.")
-            
+        # Mantido para uso interno das funções de negócio
+        animal = self.buscar_animal(idx_animal)
         adotante = None
         if idx_adotante is not None:
-            try:
-                adotante = self.adotantes[idx_adotante]
-            except IndexError:
-                raise EntidadeNaoEncontradaError(f"Adotante com índice {idx_adotante} não encontrado.")
-                
+            adotante = self.buscar_adotante(idx_adotante)
         return animal, adotante
 
     def _validar_politica_adocao(self, animal: Animal, adotante: Adotante):
@@ -236,7 +241,7 @@ class SistemaAdocao:
 
     def processar_devolucao(self, idx_animal: int, motivo: str):
         try:
-            animal, _ = self._buscar_por_indice(idx_animal)
+            animal = self.buscar_animal(idx_animal) # Usa busca pública
             if animal.status != StatusAnimal.ADOTADO:
                 raise TransicaoStatusError("Apenas animais adotados podem ser devolvidos.")
 
@@ -262,7 +267,6 @@ class SistemaAdocao:
             
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
- 
     def entrar_fila_espera(self, idx_animal: int, idx_adotante: int):
         try:
             animal, adotante = self._buscar_por_indice(idx_animal, idx_adotante)
@@ -324,7 +328,7 @@ class SistemaAdocao:
 
     def visualizar_detalhes_fila(self, idx_animal: int):
         try:
-            animal, _ = self._buscar_por_indice(idx_animal)
+            animal = self.buscar_animal(idx_animal) # Usa busca pública
             print(f"\n📊 DETALHES DE: {animal.nome}")
             print(f"Status Atual: {animal.status.value}")
             
@@ -349,7 +353,7 @@ class SistemaAdocao:
 
     def vacinar_animal(self, idx_animal: int, nome_vacina: str):
         try:
-            animal, _ = self._buscar_por_indice(idx_animal)
+            animal = self.buscar_animal(idx_animal)
             if hasattr(animal, 'vacinar'):
                 animal.vacinar(nome_vacina)
                 self.repo.salvar_animais(self.animais)
@@ -359,7 +363,7 @@ class SistemaAdocao:
 
     def treinar_animal(self, idx_animal: int):
         try:
-            animal, _ = self._buscar_por_indice(idx_animal)
+            animal = self.buscar_animal(idx_animal)
             if hasattr(animal, 'treinar'):
                 animal.treinar()
                 self.repo.salvar_animais(self.animais)
@@ -367,21 +371,32 @@ class SistemaAdocao:
             else: print(f"⚠️ {animal.nome} não pode ser treinado.")
         except (ValueError, AdocaoError) as e: print(f"❌ {e}")
 
-    def gerar_relatorio_animais(self):
+    def gerar_relatorio_animais(self, apenas_adotados=False):
         print("\n--- STATUS DO ABRIGO ---")
+        encontrou = False
         for i, a in enumerate(self.animais):
+            if apenas_adotados and a.status != StatusAnimal.ADOTADO:
+                continue
+                
+            encontrou = True
             extra_info = ""
             if a.status == StatusAnimal.RESERVADO:
                 extra_info = f" [Reservado: {a.nome_reservante}]"
             if len(a.fila_espera) > 0:
                 extra_info += f" [Fila: {len(a.fila_espera)}]"
             icone = "🟢" if a.status == StatusAnimal.DISPONIVEL else "🔴" if a.status == StatusAnimal.ADOTADO else "🟡"
-            print(f"[{i}] {icone} {a.nome} ({a.status.value}){extra_info}")
+            print(f"[{i}] {icone} {a.nome} ({a.porte.value}) - {a.status.value}{extra_info}")
+        
+        if not encontrou:
+            print("   (Nenhum animal encontrado para este critério)")
 
     def listar_adotantes(self):
         print("\n--- ADOTANTES ---")
         for i, a in enumerate(self.adotantes):
-            print(f"[{i}] {a.nome} ({a.moradia.value}, {a.area_util}m²)")
+            aviso = ""
+            if a.idade < self.settings["idade_minima"]:
+                aviso = " ⚠️ [Menor de Idade - Adoção Bloqueada]"
+            print(f"[{i}] {a.nome} - {a.idade} anos ({a.moradia.value}, {a.area_util}m²){aviso}")
 
     def gerar_relatorios_estatisticos(self):
         linhas_relatorio = []

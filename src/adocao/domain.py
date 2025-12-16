@@ -71,6 +71,7 @@ class Adotante(Pessoa):
         )
 
     def __str__(self):
+        # ADICIONADO: Idade na representação string para aparecer nas listas
         return f"[Adotante] {self.nome}, {self._idade} anos ({self._moradia.value}, {self._area_util}m²)"
 
 class FilaEspera:

@@ -1,7 +1,7 @@
 [
     {
         "tipo_classe": "Cachorro",
-        "nome": "Brutus",
+        "nome": "Grande",
         "raca": "Dogue Alemão",
         "status": "Disponível",
         "porte": "Grande",
@@ -10,8 +10,8 @@
         ],
         "precisa_passeio": true,
         "historico": [
-            "[2025-12-15 15:47] Cadastrado no sistema.",
-            "[2025-12-15 15:47] Dados cadastrais editados manualmente."
+            "[2025-12-16 00:16] Cadastrado no sistema.",
+            "[2025-12-16 00:23] Dados cadastrais editados manualmente."
         ],
         "vacinas": {},
         "nivel_adestramento": 0,
@@ -21,23 +21,16 @@
     },
     {
         "tipo_classe": "Cachorro",
-        "nome": "Mago",
-        "raca": "Vira-lata",
-        "status": "Inadotável",
+        "nome": "Bravo",
+        "raca": "",
+        "status": "Disponível",
         "porte": "Médio",
         "temperamento": [
-            "arisco"
+            "Arisco"
         ],
-        "precisa_passeio": true,
+        "precisa_passeio": false,
         "historico": [
-            "[2025-12-15 15:49] Cadastrado no sistema.",
-            "[2025-12-15 16:04] Status alterado: Disponível -> Reservado",
-            "[2025-12-15 16:04] Status alterado: Reservado -> Adotado",
-            "[2025-12-15 16:05] Status alterado: Adotado -> Devolvido",
-            "[2025-12-15 16:05] Status alterado: Devolvido -> Disponível",
-            "[2025-12-15 16:13] Status alterado: Disponível -> Adotado",
-            "[2025-12-15 16:13] Status alterado: Adotado -> Devolvido",
-            "[2025-12-15 16:13] Status alterado: Devolvido -> Inadotável"
+            "[2025-12-16 00:17] Cadastrado no sistema."
         ],
         "vacinas": {},
         "nivel_adestramento": 0,
@@ -47,31 +40,16 @@
     },
     {
         "tipo_classe": "Gato",
-        "nome": "Panzé",
-        "raca": "vira-lata",
-        "status": "Quarentena",
+        "nome": "pneu",
+        "raca": "s",
+        "status": "Disponível",
         "porte": "Pequeno",
         "temperamento": [
             "calmo"
         ],
         "independencia": 3,
         "historico": [
-            "[2025-12-15 15:49] Cadastrado no sistema.",
-            "[2025-12-15 16:01] Status alterado: Disponível -> Reservado",
-            "[2025-12-15 16:01] Status alterado: Reservado -> Adotado",
-            "[2025-12-15 16:03] Status alterado: Adotado -> Devolvido",
-            "[2025-12-15 16:03] Status alterado: Devolvido -> Disponível",
-            "[2025-12-15 16:03] Status alterado: Disponível -> Reservado",
-            "[2025-12-15 16:04] Status alterado: Reservado -> Adotado",
-            "[2025-12-15 16:04] Status alterado: Adotado -> Devolvido",
-            "[2025-12-15 16:04] Status alterado: Devolvido -> Disponível",
-            "[2025-12-15 16:05] Status alterado: Disponível -> Reservado",
-            "[2025-12-15 16:07] Status alterado: Reservado -> Adotado",
-            "[2025-12-15 16:07] Status alterado: Adotado -> Devolvido",
-            "[2025-12-15 16:07] Status alterado: Devolvido -> Disponível",
-            "[2025-12-15 16:09] Status alterado: Disponível -> Adotado",
-            "[2025-12-15 16:12] Status alterado: Adotado -> Devolvido",
-            "[2025-12-15 16:12] Status alterado: Devolvido -> Quarentena"
+            "[2025-12-16 00:19] Cadastrado no sistema."
         ],
         "vacinas": {},
         "data_reserva": null,

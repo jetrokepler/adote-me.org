@@ -1,42 +1,18 @@
 [
     {
-        "nome": "Ryan",
-        "contato": "+55 88 911111111",
+        "nome": "17",
+        "contato": "15",
         "idade": 17,
         "moradia": "Casa",
         "area_util": 100.0,
         "tem_criancas": false
     },
     {
-        "nome": "Banban",
-        "contato": "1",
-        "idade": 33,
+        "nome": "apto",
+        "contato": "",
+        "idade": 20,
         "moradia": "Apartamento",
-        "area_util": 100.0,
-        "tem_criancas": false
-    },
-    {
-        "nome": "blumenau",
-        "contato": "1",
-        "idade": 19,
-        "moradia": "Casa",
-        "area_util": 39.0,
-        "tem_criancas": false
-    },
-    {
-        "nome": "bubu",
-        "contato": "a77",
-        "idade": 44,
-        "moradia": "Apartamento",
-        "area_util": 32.0,
-        "tem_criancas": true
-    },
-    {
-        "nome": "memeu",
-        "contato": "2",
-        "idade": 22,
-        "moradia": "Casa",
-        "area_util": 400.0,
+        "area_util": 30.0,
         "tem_criancas": false
     }
 ]
