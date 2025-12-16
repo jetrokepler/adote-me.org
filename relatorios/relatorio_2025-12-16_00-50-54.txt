@@ -1,0 +1,22 @@
+
+==================================================
+📊 RELATÓRIOS ESTATÍSTICOS DO ABRIGO
+Data de Geração: 16/12/2025 00:50:54
+==================================================
+
+🏆 TOP 5 - ANIMAIS MAIS POPULARES (Maiores Filas)
+   1º. Mel - Fila: 3 pessoas
+   2º. Garfield - Fila: 1 pessoas
+
+📈 TAXA DE ADOÇÃO POR ESPÉCIE
+   🐶 Cães:  4/10 (40.0%)
+   🐱 Gatos: 1/10 (10.0%)
+
+⏱️  TEMPO MÉDIO ATÉ A ADOÇÃO
+   Média geral: 0.0 dias
+
+⚠️  DEVOLUÇÕES E ANIMAIS INADOTÁVEIS
+   🏥 Em Quarentena (Saúde): 1
+   ⛔ Inadotáveis (Comportamento): 1
+   🔙 Devolvidos (Aguardando): 0
+==================================================
